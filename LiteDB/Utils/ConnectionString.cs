@@ -62,11 +62,6 @@ namespace LiteDB
         /// </summary>
         public bool UtcDate { get; set; } = false;
 
-        /// <summary>
-        /// "upgrade": Test if database is in old version and update if needed (default: false)
-        /// </summary>
-        public bool Upgrade { get; set; } = false;
-
 #if HAVE_SYNC_OVER_ASYNC
         /// <summary>
         /// "async": Use "sync over async" to UWP apps access any directory (default: false)
@@ -118,7 +113,6 @@ namespace LiteDB
             this.LimitSize = values.GetFileSize(@"limit size", this.LimitSize);
             this.Log = values.GetValue("log", this.Log);
             this.UtcDate = values.GetValue("utc", this.UtcDate);
-            this.Upgrade = values.GetValue("upgrade", this.Upgrade);
 #if HAVE_SYNC_OVER_ASYNC
             this.Async = values.GetValue("async", this.Async);
 #endif

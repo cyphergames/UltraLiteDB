@@ -49,11 +49,6 @@ namespace LiteDB
             _log = log ?? new Logger();
             _log.Level = log?.Level ?? _connectionString.Log;
 
-            if (_connectionString.Upgrade)
-            {
-                LiteEngine.Upgrade(_connectionString.Filename, _connectionString.Password);
-            }
-
             var options = new FileOptions
             {
 #if HAVE_SYNC_OVER_ASYNC
