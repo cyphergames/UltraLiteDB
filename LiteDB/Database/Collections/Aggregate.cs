@@ -27,15 +27,6 @@ namespace LiteDB
             return (int)_engine.Value.Count(_name, query);
         }
 
-        /// <summary>
-        /// Count documents matching a query. This method does not deserialize any documents. Needs indexes on query expression
-        /// </summary>
-        public int Count(Expression<Func<BsonDocument, bool>> predicate)
-        {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            return this.Count(_visitor.Visit(predicate));
-        }
 
         #endregion
 
@@ -60,15 +51,6 @@ namespace LiteDB
             return _engine.Value.Count(_name, query);
         }
 
-        /// <summary>
-        /// Count documents matching a query. This method does not deserialize any documents. Needs indexes on query expression
-        /// </summary>
-        public long LongCount(Expression<Func<BsonDocument, bool>> predicate)
-        {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            return this.LongCount(_visitor.Visit(predicate));
-        }
 
         #endregion
 
@@ -84,15 +66,6 @@ namespace LiteDB
             return _engine.Value.Exists(_name, query);
         }
 
-        /// <summary>
-        /// Returns true if query returns any document. This method does not deserialize any document. Needs indexes on query expression
-        /// </summary>
-        public bool Exists(Expression<Func<BsonDocument, bool>> predicate)
-        {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            return this.Exists(_visitor.Visit(predicate));
-        }
 
         #endregion
 
@@ -116,17 +89,7 @@ namespace LiteDB
             return this.Min("_id");
         }
 
-        /// <summary>
-        /// Returns the first/min field using a linq expression
-        /// </summary>
-        public BsonValue Min<K>(Expression<Func<BsonDocument, K>> property)
-        {
-            if (property == null) throw new ArgumentNullException(nameof(property));
 
-            var field = _visitor.GetField(property);
-
-            return this.Min(field);
-        }
 
         /// <summary>
         /// Returns the last/max value from a index field
@@ -144,18 +107,6 @@ namespace LiteDB
         public BsonValue Max()
         {
             return this.Max("_id");
-        }
-
-        /// <summary>
-        /// Returns the last/max field using a linq expression
-        /// </summary>
-        public BsonValue Max<K>(Expression<Func<BsonDocument, K>> property)
-        {
-            if (property == null) throw new ArgumentNullException(nameof(property));
-
-            var field = _visitor.GetField(property);
-
-            return this.Max(field);
         }
 
         #endregion

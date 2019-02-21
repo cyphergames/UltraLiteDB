@@ -34,13 +34,10 @@ namespace LiteDB
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            // get BsonDocument from object
-            var doc = _mapper.ToDocument(document);
-
             // set document _id using id parameter
-            doc["_id"] = id;
+            document["_id"] = id;
 
-            return _engine.Value.Upsert(_name, doc);
+            return _engine.Value.Upsert(_name, document);
         }
     }
 }

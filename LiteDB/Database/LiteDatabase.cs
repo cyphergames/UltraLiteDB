@@ -13,7 +13,6 @@ namespace LiteDB
         #region Properties
 
         private LazyLoad<LiteEngine> _engine = null;
-        private BsonMapper _mapper = BsonMapper.Global;
         private Logger _log = null;
         private ConnectionString _connectionString = null;
 
@@ -21,11 +20,6 @@ namespace LiteDB
         /// Get logger class instance
         /// </summary>
         public Logger Log { get { return _log; } }
-
-        /// <summary>
-        /// Get current instance of BsonMapper used in this database instance (can be BsonMapper.Global)
-        /// </summary>
-        public BsonMapper Mapper { get { return _mapper; } }
 
         /// <summary>
         /// Get current database engine instance. Engine is lower data layer that works with BsonDocuments only (no mapper, no LINQ)
@@ -39,15 +33,15 @@ namespace LiteDB
         /// <summary>
         /// Starts LiteDB database using a connection string for file system database
         /// </summary>
-        public LiteDatabase(string connectionString, BsonMapper mapper = null, Logger log = null)
-            : this(new ConnectionString(connectionString), mapper, log)
+        public LiteDatabase(string connectionString, Logger log = null)
+            : this(new ConnectionString(connectionString), log)
         {
         }
 
         /// <summary>
         /// Starts LiteDB database using a connection string for file system database
         /// </summary>
-        public LiteDatabase(ConnectionString connectionString, BsonMapper mapper = null, Logger log = null)
+        public LiteDatabase(ConnectionString connectionString, Logger log = null)
         {
             if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
@@ -59,8 +53,6 @@ namespace LiteDB
             {
                 LiteEngine.Upgrade(_connectionString.Filename, _connectionString.Password);
             }
-
-            _mapper = mapper ?? BsonMapper.Global;
 
             var options = new FileOptions
             {
@@ -82,11 +74,10 @@ namespace LiteDB
         /// <summary>
         /// Starts LiteDB database using a Stream disk
         /// </summary>
-        public LiteDatabase(Stream stream, BsonMapper mapper = null, string password = null, bool disposeStream = false)
+        public LiteDatabase(Stream stream, string password = null, bool disposeStream = false)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-            _mapper = mapper ?? BsonMapper.Global;
             _log = new Logger();
 
             _engine = new LazyLoad<LiteEngine>(() => new LiteEngine(new StreamDiskService(stream, disposeStream), password: password, log: _log));
@@ -96,16 +87,14 @@ namespace LiteDB
         /// Starts LiteDB database using a custom IDiskService with all parameters available
         /// </summary>
         /// <param name="diskService">Custom implementation of persist data layer</param>
-        /// <param name="mapper">Instance of BsonMapper that map poco classes to document</param>
         /// <param name="password">Password to encrypt you datafile</param>
         /// <param name="timeout">Locker timeout for concurrent access</param>
         /// <param name="cacheSize">Max memory pages used before flush data in Journal file (when available)</param>
         /// <param name="log">Custom log implementation</param>
-        public LiteDatabase(IDiskService diskService, BsonMapper mapper = null, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null)
+        public LiteDatabase(IDiskService diskService, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null)
         {
             if (diskService == null) throw new ArgumentNullException(nameof(diskService));
 
-            _mapper = mapper ?? BsonMapper.Global;
             _log = log ?? new Logger();
 
             _engine = new LazyLoad<LiteEngine>(() => new LiteEngine(diskService, password: password, timeout: timeout, cacheSize: cacheSize, log: _log ));
@@ -124,7 +113,7 @@ namespace LiteDB
         {
             if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name));
 
-            return new LiteCollection(name, _engine, _mapper, _log);
+            return new LiteCollection(name, _engine, _log);
         }
 
         #endregion

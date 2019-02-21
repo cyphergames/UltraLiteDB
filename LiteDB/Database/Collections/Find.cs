@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+
 
 namespace LiteDB
 {
@@ -20,22 +20,10 @@ namespace LiteDB
 
             foreach(var doc in docs)
             {
-                // get object from BsonDocument
-                var obj = _mapper.ToObject<BsonDocument>(doc);
-
-                yield return obj;
+                yield return doc;
             }
         }
 
-        /// <summary>
-        /// Find documents inside a collection using Linq expression. Must have indexes in linq expression
-        /// </summary>
-        public IEnumerable<BsonDocument> Find(Expression<Func<BsonDocument, bool>> predicate, int skip = 0, int limit = int.MaxValue)
-        {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            return this.Find(_visitor.Visit(predicate), skip, limit);
-        }
 
         #endregion
 
@@ -59,13 +47,6 @@ namespace LiteDB
             return this.Find(query).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Find the first document using Linq expression. Returns null if not found. Must have indexes on predicate.
-        /// </summary>
-        public BsonDocument FindOne(Expression<Func<BsonDocument, bool>> predicate)
-        {
-            return this.Find(predicate).FirstOrDefault();
-        }
 
         /// <summary>
         /// Returns all documents inside collection order by _id index.

@@ -13,16 +13,9 @@ namespace LiteDB
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
-            var doc = _mapper.ToDocument(document);
-            var removed = this.RemoveDocId(doc);
+            var removed = this.RemoveDocId(document);
 
-            var id = _engine.Value.Insert(_name, doc, _autoId);
-
-            // checks if must update _id value in entity
-            if (removed && _id != null)
-            {
-                _id.Setter(document, id.RawValue);
-            }
+            var id = _engine.Value.Insert(_name, document, _autoId);
 
             return id;
         }
@@ -35,11 +28,9 @@ namespace LiteDB
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            var doc = _mapper.ToDocument(document);
+            document["_id"] = id;
 
-            doc["_id"] = id;
-
-            _engine.Value.Insert(_name, doc);
+            _engine.Value.Insert(_name, document);
         }
 
         /// <summary>
@@ -69,15 +60,10 @@ namespace LiteDB
         {
             foreach (var document in documents)
             {
-                var doc = _mapper.ToDocument(document);
-                var removed = this.RemoveDocId(doc);
+                var removed = this.RemoveDocId(document);
 
-                yield return doc;
+                yield return document;
 
-                if (removed && _id != null)
-                {
-                    _id.Setter(document, doc["_id"].RawValue);
-                }
             }
         }
 

@@ -31,29 +31,6 @@ namespace LiteDB
         }
 
         /// <summary>
-        /// Create a new permanent index in all documents inside this collections if index not exists already.
-        /// </summary>
-        /// <param name="property">Property linq expression</param>
-        /// <param name="unique">Create a unique keys index?</param>
-        public bool EnsureIndex<K>(Expression<Func<BsonDocument, K>> property, bool unique = false)
-        {
-            return this.EnsureIndex(property, null, unique);
-        }
-
-        /// <summary>
-        /// Create a new permanent index in all documents inside this collections if index not exists already.
-        /// </summary>
-        /// <param name="property">Property linq expression</param>
-        /// <param name="expression">Create a custom expression function to be indexed</param>
-        /// <param name="unique">Create a unique keys index?</param>
-        public bool EnsureIndex<K>(Expression<Func<BsonDocument, K>> property, string expression, bool unique = false)
-        {
-            var field = _visitor.GetField(property);
-
-            return this.EnsureIndex(field, expression ?? _visitor.GetPath(property), unique);
-        }
-
-        /// <summary>
         /// Returns all indexes information
         /// </summary>
         public IEnumerable<IndexInfo> GetIndexes()
