@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         /// <summary>
         /// Insert a new entity to this collection. Document Id must be a new value in collection - Returns document Id
         /// </summary>
-        public BsonValue Insert(T document)
+        public BsonValue Insert(BsonDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
@@ -30,7 +30,7 @@ namespace LiteDB
         /// <summary>
         /// Insert a new document to this collection using passed id value.
         /// </summary>
-        public void Insert(BsonValue id, T document)
+        public void Insert(BsonValue id, BsonDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
@@ -45,7 +45,7 @@ namespace LiteDB
         /// <summary>
         /// Insert an array of new documents to this collection. Document Id must be a new value in collection. Can be set buffer size to commit at each N documents
         /// </summary>
-        public int Insert(IEnumerable<T> docs)
+        public int Insert(IEnumerable<BsonDocument> docs)
         {
             if (docs == null) throw new ArgumentNullException(nameof(docs));
 
@@ -55,7 +55,7 @@ namespace LiteDB
         /// <summary>
         /// Implements bulk insert documents in a collection. Usefull when need lots of documents.
         /// </summary>
-        public int InsertBulk(IEnumerable<T> docs, int batchSize = 5000)
+        public int InsertBulk(IEnumerable<BsonDocument> docs, int batchSize = 5000)
         {
             if (docs == null) throw new ArgumentNullException(nameof(docs));
 
@@ -65,7 +65,7 @@ namespace LiteDB
         /// <summary>
         /// Convert each T document in a BsonDocument, setting autoId for each one
         /// </summary>
-        private IEnumerable<BsonDocument> GetBsonDocs(IEnumerable<T> documents)
+        private IEnumerable<BsonDocument> GetBsonDocs(IEnumerable<BsonDocument> documents)
         {
             foreach (var document in documents)
             {

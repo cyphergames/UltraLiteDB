@@ -5,13 +5,13 @@ using System.Linq.Expressions;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         /// <summary>
         /// Run an include action in each document returned by Find(), FindById(), FindOne() and All() methods to load DbRef documents
         /// Returns a new Collection with this action included
         /// </summary>
-        public LiteCollection<T> Include<K>(Expression<Func<T, K>> path)
+        public LiteCollection Include<K>(Expression<Func<BsonDocument, K>> path)
         {
             if (path == null) throw new ArgumentNullException(nameof(path));
 
@@ -24,7 +24,7 @@ namespace LiteDB
         /// Run an include action in each document returned by Find(), FindById(), FindOne() and All() methods to load DbRef documents
         /// Returns a new Collection with this action included
         /// </summary>
-        public LiteCollection<T> Include(string path)
+        public LiteCollection Include(string path)
         {
             if (string.IsNullOrEmpty(path)) throw new ArgumentNullException(nameof(path));
 
@@ -36,7 +36,7 @@ namespace LiteDB
         /// Returns a new Collection with this action included
         /// </summary>
         /// <param name="paths">Property paths to include.</param>
-        public LiteCollection<T> Include(string[] paths)
+        public LiteCollection Include(string[] paths)
         {
             if (paths == null)
             {
@@ -44,7 +44,7 @@ namespace LiteDB
             }
 
             // cloning this collection and adding this include
-            var newcol = new LiteCollection<T>(_name, _engine, _mapper, _log);
+            var newcol = new LiteCollection(_name, _engine, _mapper, _log);
 
             newcol._includes.AddRange(_includes);
 
@@ -59,9 +59,9 @@ namespace LiteDB
         /// Returns a new Collection with this actions included
         /// </summary>
         /// <param name="maxDepth">Maximum recersive depth of the properties to include, use -1 (default) to include all.</param>
-        public LiteCollection<T> IncludeAll(int maxDepth = -1)
+        public LiteCollection IncludeAll(int maxDepth = -1)
         {
-            return Include(GetRecursivePaths(typeof(T), maxDepth, 0));
+            return Include(GetRecursivePaths(typeof(BsonDocument), maxDepth, 0));
         }
 
         /// <summary>

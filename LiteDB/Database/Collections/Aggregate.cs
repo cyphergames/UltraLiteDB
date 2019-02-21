@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         #region Count
 
@@ -30,7 +30,7 @@ namespace LiteDB
         /// <summary>
         /// Count documents matching a query. This method does not deserialize any documents. Needs indexes on query expression
         /// </summary>
-        public int Count(Expression<Func<T, bool>> predicate)
+        public int Count(Expression<Func<BsonDocument, bool>> predicate)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
@@ -63,7 +63,7 @@ namespace LiteDB
         /// <summary>
         /// Count documents matching a query. This method does not deserialize any documents. Needs indexes on query expression
         /// </summary>
-        public long LongCount(Expression<Func<T, bool>> predicate)
+        public long LongCount(Expression<Func<BsonDocument, bool>> predicate)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
@@ -87,7 +87,7 @@ namespace LiteDB
         /// <summary>
         /// Returns true if query returns any document. This method does not deserialize any document. Needs indexes on query expression
         /// </summary>
-        public bool Exists(Expression<Func<T, bool>> predicate)
+        public bool Exists(Expression<Func<BsonDocument, bool>> predicate)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
@@ -119,7 +119,7 @@ namespace LiteDB
         /// <summary>
         /// Returns the first/min field using a linq expression
         /// </summary>
-        public BsonValue Min<K>(Expression<Func<T, K>> property)
+        public BsonValue Min<K>(Expression<Func<BsonDocument, K>> property)
         {
             if (property == null) throw new ArgumentNullException(nameof(property));
 
@@ -149,7 +149,7 @@ namespace LiteDB
         /// <summary>
         /// Returns the last/max field using a linq expression
         /// </summary>
-        public BsonValue Max<K>(Expression<Func<T, K>> property)
+        public BsonValue Max<K>(Expression<Func<BsonDocument, K>> property)
         {
             if (property == null) throw new ArgumentNullException(nameof(property));
 

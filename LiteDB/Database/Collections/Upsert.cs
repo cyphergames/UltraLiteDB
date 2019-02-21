@@ -4,22 +4,22 @@ using System.Linq;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         /// <summary>
         /// Insert or Update a document in this collection.
         /// </summary>
-        public bool Upsert(T document)
+        public bool Upsert(BsonDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
-            return this.Upsert(new T[] { document }) == 1;
+            return this.Upsert(new BsonDocument[] { document }) == 1;
         }
 
         /// <summary>
         /// Insert or Update all documents
         /// </summary>
-        public int Upsert(IEnumerable<T> documents)
+        public int Upsert(IEnumerable<BsonDocument> documents)
         {
             if (documents == null) throw new ArgumentNullException(nameof(documents));
 
@@ -29,7 +29,7 @@ namespace LiteDB
         /// <summary>
         /// Insert or Update a document in this collection.
         /// </summary>
-        public bool Upsert(BsonValue id, T document)
+        public bool Upsert(BsonValue id, BsonDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));

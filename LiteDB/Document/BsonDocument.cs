@@ -192,10 +192,6 @@ namespace LiteDB
             return 1;
         }
 
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this, false, true);
-        }
 
         #endregion
 

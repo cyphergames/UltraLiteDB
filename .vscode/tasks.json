@@ -2,12 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build shell",
+            "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/LiteDB.Shell/LiteDB.Shell.csproj"
+                "${workspaceFolder}/LiteDB/LiteDB.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

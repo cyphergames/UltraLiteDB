@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         /// <summary>
         /// Remove all document based on a Query object. Returns removed document counts
@@ -18,7 +18,7 @@ namespace LiteDB
         /// <summary>
         /// Remove all document based on a LINQ query. Returns removed document counts
         /// </summary>
-        public int Delete(Expression<Func<T, bool>> predicate)
+        public int Delete(Expression<Func<BsonDocument, bool>> predicate)
         {
             return this.Delete(_visitor.Visit(predicate));
         }

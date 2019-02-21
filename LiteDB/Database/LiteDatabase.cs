@@ -115,32 +115,16 @@ namespace LiteDB
 
         #region Collections
 
-        /// <summary>
-        /// Get a collection using a entity class as strong typed document. If collection does not exits, create a new one.
-        /// </summary>
-        /// <param name="name">Collection name (case insensitive)</param>
-        public LiteCollection<T> GetCollection<T>(string name)
-        {
-            return new LiteCollection<T>(name, _engine, _mapper, _log);
-        }
-
-        /// <summary>
-        /// Get a collection using a name based on typeof(T).Name (BsonMapper.ResolveCollectionName function)
-        /// </summary>
-        public LiteCollection<T> GetCollection<T>()
-        {
-            return this.GetCollection<T>(null);
-        }
 
         /// <summary>
         /// Get a collection using a generic BsonDocument. If collection does not exits, create a new one.
         /// </summary>
         /// <param name="name">Collection name (case insensitive)</param>
-        public LiteCollection<BsonDocument> GetCollection(string name)
+        public LiteCollection GetCollection(string name)
         {
             if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name));
 
-            return new LiteCollection<BsonDocument>(name, _engine, _mapper, _log);
+            return new LiteCollection(name, _engine, _mapper, _log);
         }
 
         #endregion

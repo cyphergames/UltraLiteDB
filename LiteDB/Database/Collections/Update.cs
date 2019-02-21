@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         /// <summary>
         /// Update a document in this collection. Returns false if not found document in collection
         /// </summary>
-        public bool Update(T document)
+        public bool Update(BsonDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
@@ -22,7 +22,7 @@ namespace LiteDB
         /// <summary>
         /// Update a document in this collection. Returns false if not found document in collection
         /// </summary>
-        public bool Update(BsonValue id, T document)
+        public bool Update(BsonValue id, BsonDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
@@ -39,7 +39,7 @@ namespace LiteDB
         /// <summary>
         /// Update all documents
         /// </summary>
-        public int Update(IEnumerable<T> documents)
+        public int Update(IEnumerable<BsonDocument> documents)
         {
             if (documents == null) throw new ArgumentNullException(nameof(documents));
 

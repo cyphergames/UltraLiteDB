@@ -595,11 +595,6 @@ namespace LiteDB
             return left.AsDouble / right.AsDouble;
         }
 
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this);
-        }
-
         #endregion
 
         #region IComparable<BsonValue>, IEquatable<BsonValue>

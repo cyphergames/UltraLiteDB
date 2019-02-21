@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace LiteDB
 {
-    public partial class LiteCollection<T>
+    public partial class LiteCollection
     {
         /// <summary>
         /// Create a new permanent index in all documents inside this collections if index not exists already. Returns true if index was created or false if already exits
@@ -35,7 +35,7 @@ namespace LiteDB
         /// </summary>
         /// <param name="property">Property linq expression</param>
         /// <param name="unique">Create a unique keys index?</param>
-        public bool EnsureIndex<K>(Expression<Func<T, K>> property, bool unique = false)
+        public bool EnsureIndex<K>(Expression<Func<BsonDocument, K>> property, bool unique = false)
         {
             return this.EnsureIndex(property, null, unique);
         }
@@ -46,7 +46,7 @@ namespace LiteDB
         /// <param name="property">Property linq expression</param>
         /// <param name="expression">Create a custom expression function to be indexed</param>
         /// <param name="unique">Create a unique keys index?</param>
-        public bool EnsureIndex<K>(Expression<Func<T, K>> property, string expression, bool unique = false)
+        public bool EnsureIndex<K>(Expression<Func<BsonDocument, K>> property, string expression, bool unique = false)
         {
             var field = _visitor.GetField(property);
 

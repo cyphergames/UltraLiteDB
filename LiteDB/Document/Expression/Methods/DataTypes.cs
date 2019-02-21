@@ -10,17 +10,6 @@ namespace LiteDB
 {
     public partial class BsonExpression
     {
-        /// <summary>
-        /// Parse a JSON string into a new BsonValue. Support multiple values (string only)
-        /// JSON('{a:1}') = {a:1}
-        /// </summary>
-        public static IEnumerable<BsonValue> JSON(IEnumerable<BsonValue> values)
-        {
-            foreach (var value in values.Where(x => x.IsString))
-            {
-                yield return JsonSerializer.Deserialize(value);
-            }
-        }
 
         /// <summary>
         /// Extend source document with other document. Copy all field from extend to source. Source document will be modified.
