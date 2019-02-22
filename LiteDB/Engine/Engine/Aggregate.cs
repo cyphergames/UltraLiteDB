@@ -79,23 +79,12 @@ namespace LiteDB
                 // run query in this collection
                 var nodes = query.Run(col, _indexer);
 
-                if (query.UseFilter)
-                {
-                    // count distinct documents
-                    return nodes
-                        .Select(x => _bsonReader.Deserialize(_data.Read(x.DataBlock)).AsDocument)
-                        .Where(x => query.FilterDocument(x))
-                        .Distinct()
-                        .LongCount();
-                }
-                else
-                {
-                    // count distinct nodes based on DataBlock
-                    return nodes
-                        .Select(x => x.DataBlock)
-                        .Distinct()
-                        .LongCount();
-                }
+                // count distinct nodes based on DataBlock
+                return nodes
+                    .Select(x => x.DataBlock)
+                    .Distinct()
+                    .LongCount();
+                
             }
         }
 
@@ -116,21 +105,10 @@ namespace LiteDB
                 // run query in this collection
                 var nodes = query.Run(col, _indexer);
 
-                if (query.UseFilter)
-                {
-                    // check if has at least first document
-                    return nodes
-                        .Select(x => _bsonReader.Deserialize(_data.Read(x.DataBlock)).AsDocument)
-                        .Where(x => query.FilterDocument(x))
-                        .Any();
-                }
-                else
-                {
-                    var first = nodes.FirstOrDefault();
+                var first = nodes.FirstOrDefault();
 
-                    // check if has at least first node
-                    return first != null;
-                }
+                // check if has at least first node
+                return first != null;
             }
         }
     }

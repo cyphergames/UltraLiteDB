@@ -11,8 +11,8 @@ namespace LiteDB
     {
         private BsonValue _value;
 
-        public QueryContains(string field, BsonValue value)
-            : base(field)
+        public QueryContains(BsonValue value)
+            : base()
         {
             _value = value;
         }
@@ -24,19 +24,6 @@ namespace LiteDB
                 .Where(x => x.Key.IsString && x.Key.AsString.Contains(_value));
         }
 
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return this.Expression.Execute(doc, false)
-                .Where(x => x.IsString)
-                .Any(x => x.AsString.Contains(_value));
-        }
 
-        public override string ToString()
-        {
-            return string.Format("{0}({1} contains {2})",
-                this.UseFilter ? "Filter" : this.UseIndex ? "Scan" : "",
-                this.Expression?.ToString() ?? this.Field,
-                _value);
-        }
     }
 }

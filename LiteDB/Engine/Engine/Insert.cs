@@ -125,24 +125,6 @@ namespace LiteDB
             // do link between index <-> data block
             pk.DataBlock = dataBlock.Position;
 
-            // for each index, insert new IndexNode
-            foreach (var index in col.GetIndexes(false))
-            {
-                // for each index, get all keys (support now multi-key) - gets distinct values only
-                // if index are unique, get single key only
-                var expr = new BsonExpression(index.Expression);
-                var keys = expr.Execute(doc, true);
-
-                // do a loop with all keys (multi-key supported)
-                foreach(var key in keys)
-                {
-                    // insert node
-                    var node = _indexer.AddNode(index, key, pk);
-
-                    // link my index node to data block address
-                    node.DataBlock = dataBlock.Position;
-                }
-            }
         }
     }
 }

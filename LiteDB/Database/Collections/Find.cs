@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace LiteDB
 {
     public partial class LiteCollection
@@ -16,7 +15,7 @@ namespace LiteDB
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
 
-            var docs = _engine.Value.Find(_name, query, _includes.ToArray(), skip, limit);
+            var docs = _engine.Value.Find(_name, query, skip, limit);
 
             foreach(var doc in docs)
             {
@@ -36,7 +35,7 @@ namespace LiteDB
         {
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            return this.Find(Query.EQ("_id", id)).SingleOrDefault();
+            return this.Find(Query.EQ(id)).SingleOrDefault();
         }
 
         /// <summary>

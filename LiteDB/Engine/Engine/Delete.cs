@@ -10,7 +10,7 @@ namespace LiteDB
         /// </summary>
         public bool Delete(string collection, BsonValue id)
         {
-            return this.Delete(collection, Query.EQ("_id", id)) == 1;
+            return this.Delete(collection, Query.EQ(id)) == 1;
         }
 
         /// <summary>
@@ -37,15 +37,6 @@ namespace LiteDB
                 {
                     // checks if cache are full
                     _trans.CheckPoint();
-
-                    // if use filter need deserialize document
-                    if (query.UseFilter)
-                    {
-                        var buffer = _data.Read(node.DataBlock);
-                        var doc = _bsonReader.Deserialize(buffer).AsDocument;
-
-                        if (query.FilterDocument(doc) == false) continue;
-                    }
 
                     _log.Write(Logger.COMMAND, "delete document :: _id = {0}", node.Key.RawValue);
 

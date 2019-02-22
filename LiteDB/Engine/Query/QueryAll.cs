@@ -10,8 +10,8 @@ namespace LiteDB
     {
         private int _order;
 
-        public QueryAll(string field, int order)
-            : base(field)
+        public QueryAll(int order)
+            : base()
         {
             _order = order;
         }
@@ -21,16 +21,5 @@ namespace LiteDB
             return indexer.FindAll(index, _order);
         }
 
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return true;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}({1})",
-                this.UseFilter ? "Filter" : this.UseIndex ? "Scan" : "",
-                this.Expression?.ToString() ?? this.Field);
-        }
     }
 }

@@ -12,7 +12,7 @@ namespace LiteDB
         /// Initializes a new instance of the <see cref="QueryEmpty" /> class.
         /// </summary>
         public QueryEmpty()
-            : base(null)
+            : base()
         {
         }
 
@@ -21,14 +21,6 @@ namespace LiteDB
             yield break;
         }
 
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return false;
-        }
 
-        public override string ToString()
-        {
-            return string.Format("(false)");
-        }
     }
 }

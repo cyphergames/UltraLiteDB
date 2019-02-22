@@ -21,12 +21,6 @@ namespace LiteDB
                 // read all collection
                 foreach (var collectionName in this.GetCollectionNames())
                 {
-                    // first create all user indexes (exclude _id index)
-                    foreach (var index in this.GetIndexes(collectionName).Where(x => x.Field != "_id"))
-                    {
-                        engine.EnsureIndex(collectionName, index.Field, index.Unique);
-                    }
-
                     // now copy documents 
                     var docs = this.Find(collectionName, Query.All());
 

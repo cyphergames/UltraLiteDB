@@ -64,17 +64,16 @@ namespace LiteDB
                 // if finish, exit loop
                 if (this.HasMore == false) return;
 
-                // if run ONLY under index, skip/limit before deserialize
-                if (_query.UseIndex && _query.UseFilter == false)
-                {
-                    if (--_skip >= 0) continue;
+                // skip/limit before deserialize
+   
+                if (--_skip >= 0) continue;
 
-                    if (--_limit <= -1)
-                    {
-                        this.HasMore = false;
-                        return;
-                    }
+                if (--_limit <= -1)
+                {
+                    this.HasMore = false;
+                    return;
                 }
+                
 
                 // get current node
                 var node = _nodes.Current;
@@ -82,22 +81,6 @@ namespace LiteDB
                 // read document from data block
                 var buffer = data.Read(node.DataBlock);
                 var doc = bsonReader.Deserialize(buffer).AsDocument;
-
-                // if need run in full scan, execute full scan and test return
-                if (_query.UseFilter)
-                {
-                    // execute query condition here - if false, do not add on final results
-                    if (_query.FilterDocument(doc) == false) continue;
-
-                    // implement skip/limit after deserialize in full scan
-                    if (--_skip >= 0) continue;
-
-                    if (--_limit <= -1)
-                    {
-                        this.HasMore = false;
-                        return;
-                    }
-                }
 
                 // increment position cursor
                 _position++;

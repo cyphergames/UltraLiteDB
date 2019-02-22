@@ -60,7 +60,6 @@ namespace LiteDB
                 InitialSize = _connectionString.InitialSize,
                 LimitSize = _connectionString.LimitSize,
                 Journal = _connectionString.Journal,
-                FileMode = _connectionString.Mode
             };
 
             _engine = new LazyLoad<LiteEngine>(() => new LiteEngine(new FileDiskService(_connectionString.Filename, options), _connectionString.Password, _connectionString.Timeout, _connectionString.CacheSize, _log, _connectionString.UtcDate));
@@ -195,7 +194,7 @@ namespace LiteDB
                 try
                 {
                     // get temp disk based on temp file
-                    var tempDisk = new FileDiskService(tempFile, new FileOptions { Journal = false, FileMode = FileMode.Exclusive });
+                    var tempDisk = new FileDiskService(tempFile, new FileOptions { Journal = false });
 
                     reduced = _engine.Value.Shrink(password, tempDisk);
                 }

@@ -12,8 +12,8 @@ namespace LiteDB
         public BsonValue Value { get { return _value; } }
         public bool IsEquals { get { return _equals; } }
 
-        public QueryLess(string field, BsonValue value, bool equals)
-            : base(field)
+        public QueryLess(BsonValue value, bool equals)
+            : base()
         {
             _value = value;
             _equals = equals;
@@ -37,20 +37,6 @@ namespace LiteDB
             }
         }
 
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return this.Expression.Execute(doc, true)
-                .Where(x => x.Type == _value.Type || (x.IsNumber && _value.IsNumber))
-                .Any(x => x.CompareTo(_value) <= (_equals ? 0 : -1));
-        }
 
-        public override string ToString()
-        {
-            return string.Format("{0}({1} <{2} {3})",
-                this.UseFilter ? "Filter" : this.UseIndex ? "Seek" : "",
-                this.Expression?.ToString() ?? this.Field,
-                _equals ? "=" : "",
-                _value);
-        }
     }
 }

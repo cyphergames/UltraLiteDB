@@ -13,7 +13,7 @@ namespace LiteDB
         private int _order;
 
         public QueryNot(Query query, int order)
-            : base("_id")
+            : base()
         {
             _query = query;
             _order = order;
@@ -24,31 +24,15 @@ namespace LiteDB
             // run base query
             var result = _query.Run(col, indexer);
 
-            this.UseIndex = _query.UseIndex;
-            this.UseFilter = _query.UseFilter;
+            // if is by index, resolve here
+            var all = new QueryAll(_order).Run(col, indexer);
 
-            if (_query.UseIndex)
-            {
-                // if is by index, resolve here
-                var all = new QueryAll("_id", _order).Run(col, indexer);
-
-                return all.Except(result, new IndexNodeComparer());
-            }
-            else
-            {
-                // if is by document, must return all nodes to be ExecuteDocument after
-                return result;
-            }
+            return all.Except(result, new IndexNodeComparer());
         }
 
         internal override IEnumerable<IndexNode> ExecuteIndex(IndexService indexer, CollectionIndex index)
         {
             throw new NotSupportedException();
-        }
-
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return !_query.FilterDocument(doc);
         }
 
         public override string ToString()

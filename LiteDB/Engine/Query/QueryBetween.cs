@@ -12,8 +12,8 @@ namespace LiteDB
         private bool _startEquals;
         private bool _endEquals;
 
-        public QueryBetween(string field, BsonValue start, BsonValue end, bool startEquals, bool endEquals)
-            : base(field)
+        public QueryBetween(BsonValue start, BsonValue end, bool startEquals, bool endEquals)
+            : base()
         {
             _start = start;
             _startEquals = startEquals;
@@ -67,27 +67,5 @@ namespace LiteDB
             }
         }
 
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return this.Expression.Execute(doc, false)
-                .Any(x =>
-                {
-                    return
-                        (_startEquals ? x.CompareTo(_start) >= 0 : x.CompareTo(_start) > 0) &&
-                        (_endEquals ? x.CompareTo(_end) <= 0 : x.CompareTo(_end) < 0);
-                });
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}({1} between {2}{3} and {4}{5})",
-                this.UseFilter ? "Filter" : this.UseIndex ? "IndexSeek" : "",
-                this.Expression?.ToString() ?? this.Field,
-                _startEquals ? "[" : "(",
-                _start, 
-                _end,
-                _endEquals ? "]" : ")"
-                );
-        }
     }
 }

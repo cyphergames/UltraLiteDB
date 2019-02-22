@@ -8,8 +8,8 @@ namespace LiteDB
     {
         private BsonValue _value;
 
-        public QueryEquals(string field, BsonValue value)
-            : base(field)
+        public QueryEquals(BsonValue value)
+            : base()
         {
             _value = value;
         }
@@ -34,18 +34,6 @@ namespace LiteDB
             }
         }
 
-        internal override bool FilterDocument(BsonDocument doc)
-        {
-            return this.Expression.Execute(doc, true)
-                .Any(x => x.CompareTo(_value) == 0);
-        }
 
-        public override string ToString()
-        {
-            return string.Format("{0}({1} = {2})",
-                this.UseFilter ? "Filter" : this.UseIndex ? "Seek" : "",
-                this.Expression?.ToString() ?? this.Field,
-                _value);
-        }
     }
 }

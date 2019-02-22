@@ -172,14 +172,7 @@ namespace LiteDB
         /// </summary>
         public CollectionIndex PK { get { return this.Indexes[0]; } }
 
-        /// <summary>
-        /// Returns all used indexes
-        /// </summary>
-        public IEnumerable<CollectionIndex> GetIndexes(bool includePK)
-        {
-            return this.Indexes.Where(x => x.IsEmpty == false && x.Slot >= (includePK ? 0 : 1));
-        }
-
+ 
         #endregion
     }
 }

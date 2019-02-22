@@ -142,7 +142,7 @@ namespace LiteDB
         {
             if (id.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(id));
 
-            var doc = _engine.Find(FILES, Query.EQ("_id", id)).FirstOrDefault();
+            var doc = _engine.Find(FILES, Query.EQ(id)).FirstOrDefault();
 
             if (doc == null) return null;
 
@@ -156,7 +156,7 @@ namespace LiteDB
         {
             var query = startsWith.IsNullOrWhiteSpace() ?
                 Query.All() :
-                Query.StartsWith("_id", startsWith);
+                Query.StartsWith(startsWith);
 
             var docs = _engine.Find(FILES, query);
 
@@ -173,7 +173,7 @@ namespace LiteDB
         {
             if (id.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(id));
 
-            return _engine.Exists(FILES, Query.EQ("_id", id));
+            return _engine.Exists(FILES, Query.EQ(id));
         }
 
         /// <summary>

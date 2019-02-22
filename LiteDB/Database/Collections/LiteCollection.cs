@@ -8,7 +8,7 @@ namespace LiteDB
         private string _name;
         private LazyLoad<LiteEngine> _engine;
         private Logger _log;
-        private List<string> _includes;
+
 
         private BsonType _autoId = BsonType.Null;
 
@@ -23,7 +23,6 @@ namespace LiteDB
             _name = name;
             _engine = engine;
             _log = log;
-            _includes = new List<string>();
 
             _autoId = BsonType.ObjectId;
         }

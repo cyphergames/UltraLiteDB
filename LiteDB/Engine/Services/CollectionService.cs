@@ -102,38 +102,38 @@ namespace LiteDB
             var pages = new HashSet<uint>();
 
             // search for all data page and index page
-            foreach (var index in col.GetIndexes(true))
+            var index = col.PK;
+            
+            // get all nodes from index
+            var nodes = _indexer.FindAll(index, Query.Ascending);
+
+            foreach (var node in nodes)
             {
-                // get all nodes from index
-                var nodes = _indexer.FindAll(index, Query.Ascending);
-
-                foreach (var node in nodes)
+                // if is PK index, add dataPages
+                if (index.Slot == 0)
                 {
-                    // if is PK index, add dataPages
-                    if (index.Slot == 0)
+                    pages.Add(node.DataBlock.PageID);
+
+                    // read datablock to check if there is any extended page
+                    var block = _data.GetBlock(node.DataBlock);
+
+                    if (block.ExtendPageID != uint.MaxValue)
                     {
-                        pages.Add(node.DataBlock.PageID);
-
-                        // read datablock to check if there is any extended page
-                        var block = _data.GetBlock(node.DataBlock);
-
-                        if (block.ExtendPageID != uint.MaxValue)
-                        {
-                            _pager.DeletePage(block.ExtendPageID, true);
-                        }
+                        _pager.DeletePage(block.ExtendPageID, true);
                     }
-
-                    // memory checkpoint
-                    _trans.CheckPoint();
-
-                    // add index page to delete list page
-                    pages.Add(node.Position.PageID);
                 }
 
-                // remove head+tail nodes in all indexes
-                pages.Add(index.HeadNode.PageID);
-                pages.Add(index.TailNode.PageID);
+                // memory checkpoint
+                _trans.CheckPoint();
+
+                // add index page to delete list page
+                pages.Add(node.Position.PageID);
             }
+
+            // remove head+tail nodes in all indexes
+            pages.Add(index.HeadNode.PageID);
+            pages.Add(index.TailNode.PageID);
+            
 
             // and now, lets delete all this pages
             foreach (var pageID in pages)
