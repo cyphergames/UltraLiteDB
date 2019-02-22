@@ -12,28 +12,7 @@ namespace LiteDB
     /// </summary>
     internal class StorageUnitHelper
     {
-        /// <summary>
-        /// Convert storage unit string "1gb", "10 mb", "80000" to long bytes
-        /// </summary>
-        public static long ParseFileSize(string size)
-        {
-            var match = Regex.Match(size, @"^(\d+)\s*([tgmk])?(b|byte|bytes)?$", RegexOptions.IgnoreCase);
 
-            if (!match.Success) return 0;
-
-            var num = Convert.ToInt64(match.Groups[1].Value);
-
-            switch (match.Groups[2].Value.ToLower())
-            {
-                case "t": return num * 1024L * 1024L * 1024L * 1024L;
-                case "g": return num * 1024L * 1024L * 1024L;
-                case "m": return num * 1024L * 1024L;
-                case "k": return num * 1024L;
-                case "": return num;
-            }
-
-            return 0;
-        }
 
         /// <summary>
         /// Format a long file length to pretty file unit

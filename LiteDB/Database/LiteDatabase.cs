@@ -112,19 +112,6 @@ namespace LiteDB
 
         #endregion
 
-        #region FileStorage
-
-        private LiteStorage _fs = null;
-
-        /// <summary>
-        /// Returns a special collection for storage files/stream inside datafile
-        /// </summary>
-        public LiteStorage FileStorage
-        {
-            get { return _fs ?? (_fs = new LiteStorage(_engine.Value)); }
-        }
-
-        #endregion
 
         #region Shortcut
 
