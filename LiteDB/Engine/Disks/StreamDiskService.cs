@@ -118,11 +118,6 @@ namespace LiteDB
         #region Not implemented in Stream
 
         /// <summary>
-        /// Single process only
-        /// </summary>
-        public bool IsExclusive { get { return true; } }
-
-        /// <summary>
         /// No journal in Stream
         /// </summary>
         public bool IsJournalEnabled { get { return false; } }
@@ -149,20 +144,6 @@ namespace LiteDB
         {
         }
 
-        /// <summary>
-        /// No lock implemented
-        /// </summary>
-        public int Lock(LockState state, TimeSpan timeout)
-        {
-            return 0;
-        }
-
-        /// <summary>
-        /// No lock implemented
-        /// </summary>
-        public void Unlock(LockState state, int position)
-        {
-        }
 
         /// <summary>
         /// No flush implemented

@@ -13,8 +13,6 @@ namespace LiteDB
 
         private Logger _log;
 
-        private LockService _locker;
-
         private IDiskService _disk;
 
         private CacheService _cache;
@@ -58,10 +56,6 @@ namespace LiteDB
         /// </summary>
         public TimeSpan Timeout { get { return _timeout; } }
 
-        /// <summary>
-        /// Instance of locker control
-        /// </summary>
-        public LockService Locker { get { return _locker; } }
 
         #endregion
 
@@ -152,11 +146,10 @@ namespace LiteDB
         private void InitializeServices()
         {
             _cache = new CacheService(_disk, _log);
-            _locker = new LockService(_disk, _cache, _timeout, _log);
             _pager = new PageService(_disk, _crypto, _cache, _log);
             _indexer = new IndexService(_pager, _log);
             _data = new DataService(_pager, _log);
-            _trans = new TransactionService(_disk, _crypto, _pager, _locker, _cache, _cacheSize, _log);
+            _trans = new TransactionService(_disk, _crypto, _pager, _cache, _cacheSize, _log);
             _collections = new CollectionService(_pager, _indexer, _data, _trans, _log);
         }
 
@@ -187,29 +180,27 @@ namespace LiteDB
         /// </summary>
         private T Transaction<T>(string collection, bool addIfNotExists, Func<CollectionPage, T> action)
         {
-            // always starts write operation locking database
-            using (_locker.Write())
+
+            try
             {
-                try
-                {
-                    var col = this.GetCollectionPage(collection, addIfNotExists);
+                var col = this.GetCollectionPage(collection, addIfNotExists);
 
-                    var result = action(col);
+                var result = action(col);
 
-                    _trans.PersistDirtyPages();
+                _trans.PersistDirtyPages();
 
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    _log.Write(Logger.ERROR, ex.Message);
-
-                    // if an error occurs during an operation, rollback must be called to avoid datafile inconsistent
-                    _cache.DiscardDirtyPages();
-
-                    throw;
-                }
+                return result;
             }
+            catch (Exception ex)
+            {
+                _log.Write(Logger.ERROR, ex.Message);
+
+                // if an error occurs during an operation, rollback must be called to avoid datafile inconsistent
+                _cache.DiscardDirtyPages();
+
+                throw;
+            }
+            
         }
 
         public void Dispose()

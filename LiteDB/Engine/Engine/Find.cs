@@ -18,22 +18,21 @@ namespace LiteDB
 
             using (var cursor = new QueryCursor(query, skip, limit))
             {
-                using (_locker.Read())
-                {
-                    // get my collection page
-                    var col = this.GetCollectionPage(collection, false);
 
-                    // no collection, no documents
-                    if (col == null) yield break;
+                // get my collection page
+                var col = this.GetCollectionPage(collection, false);
 
-                    // get nodes from query executor to get all IndexNodes
-                    cursor.Initialize(query.Run(col, _indexer).GetEnumerator());
+                // no collection, no documents
+                if (col == null) yield break;
 
-                    _log.Write(Logger.QUERY, "{0} :: {1}", collection, query);
+                // get nodes from query executor to get all IndexNodes
+                cursor.Initialize(query.Run(col, _indexer).GetEnumerator());
 
-                    // fill buffer with documents 
-                    cursor.Fetch(_trans, _data, _bsonReader);
-                }
+                _log.Write(Logger.QUERY, "{0} :: {1}", collection, query);
+
+                // fill buffer with documents 
+                cursor.Fetch(_trans, _data, _bsonReader);
+            
 
                 // returing first documents in buffer
                 foreach (var doc in cursor.Documents) yield return doc;
@@ -41,11 +40,9 @@ namespace LiteDB
                 // if still documents to read, continue
                 while (cursor.HasMore)
                 {
-                    // lock read mode
-                    using (var l = _locker.Read())
-                    {
-                        cursor.Fetch(_trans, _data, _bsonReader);
-                    }
+  
+                    cursor.Fetch(_trans, _data, _bsonReader);
+                    
 
                     // return documents from buffer
                     foreach (var doc in cursor.Documents) yield return doc;

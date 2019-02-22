@@ -13,24 +13,23 @@ namespace LiteDB
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
 
-            using (_locker.Read())
-            {
-                var col = this.GetCollectionPage(collection, false);
 
-                if (col == null) return BsonValue.MinValue;
+            var col = this.GetCollectionPage(collection, false);
 
-                // get index (no index, no min)
-                var index = col.GetIndex(field);
+            if (col == null) return BsonValue.MinValue;
 
-                if (index == null) return BsonValue.MinValue;
+            // get index (no index, no min)
+            var index = col.GetIndex(field);
 
-                var head = _indexer.GetNode(index.HeadNode);
-                var next = _indexer.GetNode(head.Next[0]);
+            if (index == null) return BsonValue.MinValue;
 
-                if (next.IsHeadTail(index)) return BsonValue.MinValue;
+            var head = _indexer.GetNode(index.HeadNode);
+            var next = _indexer.GetNode(head.Next[0]);
 
-                return next.Key;
-            }
+            if (next.IsHeadTail(index)) return BsonValue.MinValue;
+
+            return next.Key;
+            
         }
 
         /// <summary>
@@ -41,24 +40,23 @@ namespace LiteDB
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
 
-            using (_locker.Read())
-            {
-                var col = this.GetCollectionPage(collection, false);
 
-                if (col == null) return BsonValue.MaxValue;
+            var col = this.GetCollectionPage(collection, false);
 
-                // get index (no index, no max)
-                var index = col.GetIndex(field);
+            if (col == null) return BsonValue.MaxValue;
 
-                if (index == null) return BsonValue.MaxValue;
+            // get index (no index, no max)
+            var index = col.GetIndex(field);
 
-                var tail = _indexer.GetNode(index.TailNode);
-                var prev = _indexer.GetNode(tail.Prev[0]);
+            if (index == null) return BsonValue.MaxValue;
 
-                if (prev.IsHeadTail(index)) return BsonValue.MaxValue;
+            var tail = _indexer.GetNode(index.TailNode);
+            var prev = _indexer.GetNode(tail.Prev[0]);
 
-                return prev.Key;
-            }
+            if (prev.IsHeadTail(index)) return BsonValue.MaxValue;
+
+            return prev.Key;
+        
         }
 
         /// <summary>
@@ -68,24 +66,22 @@ namespace LiteDB
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
 
-            using (_locker.Read())
-            {
-                var col = this.GetCollectionPage(collection, false);
+            var col = this.GetCollectionPage(collection, false);
 
-                if (col == null) return 0;
+            if (col == null) return 0;
 
-                if (query == null) return col.DocumentCount;
+            if (query == null) return col.DocumentCount;
 
-                // run query in this collection
-                var nodes = query.Run(col, _indexer);
+            // run query in this collection
+            var nodes = query.Run(col, _indexer);
 
-                // count distinct nodes based on DataBlock
-                return nodes
-                    .Select(x => x.DataBlock)
-                    .Distinct()
-                    .LongCount();
-                
-            }
+            // count distinct nodes based on DataBlock
+            return nodes
+                .Select(x => x.DataBlock)
+                .Distinct()
+                .LongCount();
+            
+        
         }
 
         /// <summary>
@@ -96,20 +92,19 @@ namespace LiteDB
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (query == null) throw new ArgumentNullException(nameof(query));
 
-            using (_locker.Read())
-            {
-                var col = this.GetCollectionPage(collection, false);
 
-                if (col == null) return false;
+            var col = this.GetCollectionPage(collection, false);
 
-                // run query in this collection
-                var nodes = query.Run(col, _indexer);
+            if (col == null) return false;
 
-                var first = nodes.FirstOrDefault();
+            // run query in this collection
+            var nodes = query.Run(col, _indexer);
 
-                // check if has at least first node
-                return first != null;
-            }
+            var first = nodes.FirstOrDefault();
+
+            // check if has at least first node
+            return first != null;
+        
         }
     }
 }

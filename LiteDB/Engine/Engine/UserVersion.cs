@@ -11,12 +11,11 @@ namespace LiteDB
         {
             get
             {
-                using (_locker.Read())
-                {
-                    var header = _pager.GetPage<HeaderPage>(0);
 
-                    return header.UserVersion;
-                }
+                var header = _pager.GetPage<HeaderPage>(0);
+
+                return header.UserVersion;
+            
             }
             set
             {

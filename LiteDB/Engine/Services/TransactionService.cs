@@ -11,18 +11,16 @@ namespace LiteDB
     {
         private IDiskService _disk;
         private AesEncryption _crypto;
-        private LockService _locker;
         private PageService _pager;
         private CacheService _cache;
         private Logger _log;
         private int _cacheSize;
 
-        internal TransactionService(IDiskService disk, AesEncryption crypto, PageService pager, LockService locker, CacheService cache, int cacheSize, Logger log)
+        internal TransactionService(IDiskService disk, AesEncryption crypto, PageService pager, CacheService cache, int cacheSize, Logger log)
         {
             _disk = disk;
             _crypto = crypto;
             _cache = cache;
-            _locker = locker;
             _pager = pager;
             _cacheSize = cacheSize;
             _log = log;
@@ -121,28 +119,27 @@ namespace LiteDB
         {
             _log.Write(Logger.RECOVERY, "initializing recovery mode");
 
-            using (_locker.Write())
+
+            // double check in header need recovery (could be already recover from another thread)
+            var header = BasePage.ReadPage(_disk.ReadPage(0)) as HeaderPage;
+
+            if (header.Recovery == false) return;
+
+            // read all journal pages
+            foreach (var buffer in _disk.ReadJournal(header.LastPageID))
             {
-                // double check in header need recovery (could be already recover from another thread)
-                var header = BasePage.ReadPage(_disk.ReadPage(0)) as HeaderPage;
+                // read pageID (first 4 bytes)
+                var pageID = BitConverter.ToUInt32(buffer, 0);
 
-                if (header.Recovery == false) return;
+                _log.Write(Logger.RECOVERY, "recover page #{0:0000}", pageID);
 
-                // read all journal pages
-                foreach (var buffer in _disk.ReadJournal(header.LastPageID))
-                {
-                    // read pageID (first 4 bytes)
-                    var pageID = BitConverter.ToUInt32(buffer, 0);
-
-                    _log.Write(Logger.RECOVERY, "recover page #{0:0000}", pageID);
-
-                    // write in stream (encrypt if datafile is encrypted)
-                    _disk.WritePage(pageID, _crypto == null || pageID == 0 ? buffer : _crypto.Encrypt(buffer));
-                }
-
-                // shrink datafile
-                _disk.ClearJournal(header.LastPageID);
+                // write in stream (encrypt if datafile is encrypted)
+                _disk.WritePage(pageID, _crypto == null || pageID == 0 ? buffer : _crypto.Encrypt(buffer));
             }
+
+            // shrink datafile
+            _disk.ClearJournal(header.LastPageID);
+            
         }
     }
 }

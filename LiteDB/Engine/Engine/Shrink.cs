@@ -15,7 +15,6 @@ namespace LiteDB
 
             // if temp disk are not passed, use memory stream disk
             using (var temp = tempDisk ?? new StreamDiskService(new MemoryStream()))
-            using (_locker.Write())
             using (var engine = new LiteEngine(temp, password))
             {
                 // read all collection
