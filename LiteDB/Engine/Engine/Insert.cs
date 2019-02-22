@@ -72,7 +72,7 @@ namespace LiteDB
             // ** this code can be removed when datafile change from 7 (HeaderPage.FILE_VERSION) **
             if (col.Sequence == 0 && col.DocumentCount > 0)
             {
-                var max = this.Max(col.CollectionName, "_id");
+                var max = this.Max(col.CollectionName);
 
                 // if max value is a number, convert to Sequence last value
                 // if not, just set sequence as document count

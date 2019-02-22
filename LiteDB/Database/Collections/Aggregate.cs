@@ -74,40 +74,21 @@ namespace LiteDB
         /// <summary>
         /// Returns the first/min value from a index field
         /// </summary>
-        public BsonValue Min(string field)
-        {
-            if (string.IsNullOrEmpty(field)) throw new ArgumentNullException(nameof(field));
-
-            return _engine.Value.Min(_name, field);
-        }
-
-        /// <summary>
-        /// Returns the first/min _id field
-        /// </summary>
         public BsonValue Min()
         {
-            return this.Min("_id");
+            return _engine.Value.Min(_name);
         }
-
 
 
         /// <summary>
         /// Returns the last/max value from a index field
         /// </summary>
-        public BsonValue Max(string field)
-        {
-            if (string.IsNullOrEmpty(field)) throw new ArgumentNullException(nameof(field));
-
-            return _engine.Value.Max(_name, field);
-        }
-
-        /// <summary>
-        /// Returns the last/max _id field
-        /// </summary>
         public BsonValue Max()
         {
-            return this.Max("_id");
+            return _engine.Value.Max(_name);
         }
+
+
 
         #endregion
     }

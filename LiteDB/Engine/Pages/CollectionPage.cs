@@ -151,21 +151,11 @@ namespace LiteDB
         /// </summary>
         public CollectionIndex GetFreeIndex()
         {
-            for (byte i = 0; i < this.Indexes.Length; i++)
-            {
-                if (this.Indexes[i].IsEmpty) return this.Indexes[i];
-            }
+            if (this.Indexes[0].IsEmpty) return this.Indexes[0];
 
             throw LiteException.IndexLimitExceeded(this.CollectionName);
         }
 
-        /// <summary>
-        /// Get index from field name (index field name is case sensitive) - returns null if not found
-        /// </summary>
-        public CollectionIndex GetIndex(string field)
-        {
-            return this.Indexes.FirstOrDefault(x => x.Field == field);
-        }
 
         /// <summary>
         /// Get primary key index (_id index)

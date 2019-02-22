@@ -8,10 +8,9 @@ namespace LiteDB
         /// <summary>
         /// Returns first value from an index (first is min value)
         /// </summary>
-        public BsonValue Min(string collection, string field)
+        public BsonValue Min(string collection)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
-            if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
 
 
             var col = this.GetCollectionPage(collection, false);
@@ -19,7 +18,7 @@ namespace LiteDB
             if (col == null) return BsonValue.MinValue;
 
             // get index (no index, no min)
-            var index = col.GetIndex(field);
+            var index = col.PK;
 
             if (index == null) return BsonValue.MinValue;
 
@@ -35,18 +34,16 @@ namespace LiteDB
         /// <summary>
         /// Returns last value from an index (last is max value)
         /// </summary>
-        public BsonValue Max(string collection, string field)
+        public BsonValue Max(string collection)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
-            if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
-
 
             var col = this.GetCollectionPage(collection, false);
 
             if (col == null) return BsonValue.MaxValue;
 
             // get index (no index, no max)
-            var index = col.GetIndex(field);
+            var index = col.PK;
 
             if (index == null) return BsonValue.MaxValue;
 
