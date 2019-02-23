@@ -46,7 +46,7 @@ The biggest difference is that your collections are not generic types, they only
 
 ## Installing in a Unity project
 
-Download the UltraLiteDB.dll and put it in the ./Assets/Plugins folder of your Unity project. That should be it!
+Download the UltraLiteDB.dll from the [Releases page](https://github.com/rejemy/UltraLiteDB/releases) and put it in the ./Assets/Plugins folder of your Unity project. That should be it!
 
 ## How to use UltraLiteDB
 
