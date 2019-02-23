@@ -1,157 +1,105 @@
-# LiteDB - A .NET NoSQL Document Store in a single data file
+# UltraLiteDB - A bare-bones C# .NET Key-value Store in a single database file, intended for use in Unity
 
-[![Join the chat at https://gitter.im/mbdavid/LiteDB](https://badges.gitter.im/mbdavid/LiteDB.svg)](https://gitter.im/mbdavid/LiteDB?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build status](https://ci.appveyor.com/api/projects/status/sfe8he0vik18m033?svg=true)](https://ci.appveyor.com/project/mbdavid/litedb) [![Build Status](https://travis-ci.org/mbdavid/LiteDB.svg?branch=master)](https://travis-ci.org/mbdavid/LiteDB)
+UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Anything that needs reflection, Linq, or dynamic code generation has been removed to make it work in Unity's IL2CPP AoT runtime environment. Some additional features have been removed to reduce code footprint. What's left is a very small, fast key-value store that lets you save and load BSON-encoded data in any Unity environment.
 
-LiteDB is a small, fast and lightweight NoSQL embedded database. 
+## Major features missing from LiteDB
 
-- Serverless NoSQL Document Store
+- Due to reflection limitations, there is no automatic POCO mapper. You must manually convert your data to and from BSON format. It's an inconvenience, especially if you have many object types of deep complex object trees. On the other hand, it's an opportunity to carefully consider your data's encoding, with an eye towards forwards binary compatibility.
+- Due to linq limitations, there are no secondary indexes. Each collection is indexed only by a single primary key.
+- Thread and file locking overhead has been removed, databases must be accessed from a single thread, which should not be an issue in Unity.
+- File storage and streaming have been removed as not needed in a Unity setting.
+- No cross-collection document referencing
+- No interactive shell
+
+## So what's still there?
+
+- A very fast way to save, load and update BSON-encoded data into a compact, encrypted, managable single file.
+- Basic queries on the primary key (all, less than, greater than, between, in)
 - Simple API similar to MongoDB
-- 100% C# code for .NET 3.5 / .NET 4.0 / NETStandard 1.3 / NETStandard 2.0 in a single DLL (less than 300kb)
-- Thread safe and process safe
+- File format compatibility with LiteDB
+- 100% C# code for .NETStandard 2.0 Unity preset in a single DLL (less than 123kb)
 - ACID in document/operation level
 - Data recovery after write failure (journal mode)
 - Datafile encryption using DES (AES) cryptography
-- Map your POCO classes to `BsonDocument` using attributes or fluent mapper API
-- Store files and stream data (like GridFS in MongoDB)
-- Single data file storage (like SQLite)
-- Index document fields for fast search (up to 16 indexes per collection)
-- LINQ support for queries
-- Shell command line - [try this online version](http://www.litedb.org/#shell)
-- Pretty fast - [compare results with SQLite here](https://github.com/mbdavid/LiteDB-Perf)
 - Open source and free for everyone - including commercial use
-- Install from NuGet: `Install-Package LiteDB`
+- What, you need more than that?
 
-## New in 4.0
-- New `Expressions/Path` index/query support. See [Expressions](https://github.com/mbdavid/LiteDB/wiki/Expressions)
-- Nested `Include` support
-- Optimized query execution (with explain plain debug)
-- Fix concurrency problems
-- Remove transaction and auto index creation
-- Support for full scan search and LINQ search
-- New shell commands: update fields based on expressions and select/transform documents
-- See full [changelog](https://github.com/mbdavid/LiteDB/wiki/Changelog)
+## Use case
 
-## Try online
+This is a great library to use for any project that needs to store lots of mutable data in a convenient and accessible way. For example:
 
-[Try LiteDB Web Shell](http://www.litedb.org/#shell). For security reasons, in the online version not all commands are available. Try the offline version for full feature tests.
+- Large save game files that have long lists of completed quests, NPC flags, explored area state, etc
+- A Minecraft-like game where a vast world can be edited by the user and must be persisted to disk
+- Game statistics, win/loss records, gameplay recording sessions
+
+It could also be useful for large amounts of read-only data as well, where you need to locate records in a data-file too large to keep in memory all the time:
+
+- Large dialog trees
+- Monster/item stats
+- Quest scripts
 
 ## Documentation
 
-Visit [the Wiki](https://github.com/mbdavid/LiteDB/wiki) for full documentation. For simplified chinese version, [check here](https://github.com/lidanger/LiteDB.wiki_Translation_zh-cn).
+For basic CRUD operations, the [LiteDB documentation](https://github.com/mbdavid/LiteDB/wiki) largely applies to UltraLiteDB.
 
-## Download
+The biggest difference is that your collections are not generic types, they only store BsonDocument classes. There are no APIs for managing secondary indexes. Query elements that take a field parameter in LiteDB don't take one in UltraLiteDB, since the only field that can be queried is the primary key.
 
-Download the source code or binary only in [LiteDB Releases](https://github.com/mbdavid/LiteDB/releases)
+## Installing in a Unity project
 
-## How to use LiteDB
+Download the UltraLiteDB.dll and put it in the ./Assets/Plugins folder of your Unity project. That should be it!
+
+## How to use UltraLiteDB
 
 A quick example for storing and searching documents:
 
 ```C#
-// Create your POCO class
-public class Customer
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int Age { get; set; }
-    public string[] Phones { get; set; }
-    public bool IsActive { get; set; }
-}
+using UltraLiteDB;
 
-// Open database (or create if doesn't exist)
-using(var db = new LiteDatabase(@"MyData.db"))
+void DatabaseTest()
 {
-    // Get customer collection
-    var col = db.GetCollection<Customer>("customers");
+    // Open database (or create if doesn't exist)
+    var db = new UltraLiteDatabase("MyData.db")
 
-    // Create your new customer instance
-	var customer = new Customer
-    { 
-        Name = "John Doe", 
-        Phones = new string[] { "8000-0000", "9000-0000" }, 
-        Age = 39,
-        IsActive = true
-    };
-    
-    // Create unique index in Name field
-    col.EnsureIndex(x => x.Name, true);
+    // Get a collection
+    var col = db.GetCollection("savegames");
+
+    // Create a new character document
+	var character = new BsonDocument();
+    character["Name"] = "John Doe";
+    character["Equipment"] = new string[] { "sword", "gnome hat" };
+    character["Level"] = 1;
+    character["IsActive"] = true;
 	
-    // Insert new customer document (Id will be auto-incremented)
-    col.Insert(customer);
-	
+    // Insert new customer document (Id will be auto generated)
+    BsonValue id = col.Insert(character);
+    // new Id has also been added to the document at character["_id"]
+
     // Update a document inside a collection
-    customer.Name = "Joana Doe";
-	
-    col.Update(customer);
-	
-    // Use LINQ to query documents (with no index)
-    var results = col.Find(x => x.Age > 20);
+    character["Name"] = "Joana Doe";
+    col.Update(character);
+
+    // Insert a document with a manually chosen Id
+	var character2 = new BsonDocument();
+    character2["_id"] = 10;
+    character2["Name"] = "Test Bob";
+    character2["Level"] = 10;
+    character2["IsActive"] = true;
+    col.Insert(character2);
+
+    // Load all documents
+    List<BsonDocument> allCharacters = new List<BsonDocument>(characters.FindAll());
+
+    // Delete something
+    col.Delete(new BsonValue(10));
+
+    // Upsert (Update if present or insert if not)
+    col.Upsert(character);
+
+    // Don't forget to cleanup!
+    db.Dispose();
 }
 ```
 
-Using fluent mapper and cross document reference for more complex data models
-
-```C#
-// DbRef to cross references
-public class Order
-{
-    public ObjectId Id { get; set; }
-    public DateTime OrderDate { get; set; }
-    public Address ShippingAddress { get; set; }
-    public Customer Customer { get; set; }
-    public List<Product> Products { get; set; }
-}        
-
-// Re-use mapper from global instance
-var mapper = BsonMapper.Global;
-
-// "Produts" and "Customer" are from other collections (not embedded document)
-mapper.Entity<Order>()
-    .DbRef(x => x.Customer, "customers")   // 1 to 1/0 reference
-    .DbRef(x => x.Products, "products")    // 1 to Many reference
-    .Field(x => x.ShippingAddress, "addr"); // Embedded sub document
-            
-using(var db = new LiteDatabase("MyOrderDatafile.db"))
-{
-    var orders = db.GetCollection<Order>("orders");
-        
-    // When query Order, includes references
-    var query = orders
-        .Include(x => x.Customer)
-        .Include(x => x.Products) // 1 to many reference
-        .Find(x => x.OrderDate <= DateTime.Now);
-
-    // Each instance of Order will load Customer/Products references
-    foreach(var order in query)
-    {
-        var name = order.Customer.Name;
-        ...
-    }
-}
-
-```
-
-## Where to use?
-
-- Desktop/local small applications
-- Application file format
-- Small web applications
-- One database **per account/user** data store
-- Few concurrent write operations
-
-## 3rd Party Tools for LiteDB
-
-- A GUI viewer tool: https://github.com/falahati/LiteDBViewer
-- A GUI editor tool: https://github.com/JosefNemec/LiteDbExplorer 
-- LiteDB Manager tool : https://darwich.mx/downloads/
-- Lucene.NET directory: https://github.com/sheryever/LiteDBDirectory
-- LINQPad support: https://github.com/adospace/litedbpad
-- F# support: https://github.com/Zaid-Ajaj/LiteDB.FSharp
-- PowerShell wrapper - https://github.com/v2kiran/PSLiteDB
-
-## Changelog
-
-Change details for each release are documented in the [release notes](https://github.com/mbdavid/LiteDB/releases).
 
 ## License
 
@@ -161,4 +109,4 @@ Copyright (c) 2017 - Maurício David
 
 ## Thanks
 
-A special thanks to @negue and @szurgot helping with portable version and @lidanger for simplified chinese translation. 
+This project is entirely built upon Maurício David's excellent LiteDB, and would not exist without it. 
