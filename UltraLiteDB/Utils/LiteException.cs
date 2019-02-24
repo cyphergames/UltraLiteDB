@@ -78,6 +78,11 @@ namespace UltraLiteDB
             return new LiteException(COLLECTION_LIMIT_EXCEEDED, "This database exceeded the maximum limit of collection names size: {0} bytes", limit);
         }
 
+        internal static LiteException IndexDropId()
+        {
+            return new LiteException(INDEX_DROP_IP, "Primary key index '_id' can't be dropped.");
+        }
+
         internal static LiteException IndexLimitExceeded(string collection)
         {
             return new LiteException(INDEX_LIMIT_EXCEEDED, "Collection '{0}' exceeded the maximum limit of indices: {1}", collection, CollectionIndex.INDEX_PER_COLLECTION);
@@ -91,6 +96,11 @@ namespace UltraLiteDB
         internal static LiteException IndexKeyTooLong()
         {
             return new LiteException(INDEX_KEY_TOO_LONG, "Index key must be less than {0} bytes.", IndexService.MAX_INDEX_LENGTH);
+        }
+
+        internal static LiteException IndexNotFound(string collection, string field)
+        {
+            return new LiteException(INDEX_NOT_FOUND, "Index not found on '{0}.{1}'.", collection, field);
         }
 
         internal static LiteException LockTimeout(TimeSpan ts)

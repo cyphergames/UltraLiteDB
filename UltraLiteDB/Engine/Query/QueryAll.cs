@@ -10,8 +10,8 @@ namespace UltraLiteDB
     {
         private int _order;
 
-        public QueryAll(int order)
-            : base()
+        public QueryAll(string field, int order)
+            : base(field)
         {
             _order = order;
         }
@@ -21,5 +21,16 @@ namespace UltraLiteDB
             return indexer.FindAll(index, _order);
         }
 
+        internal override bool FilterDocument(BsonDocument doc)
+        {
+            return true;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}({1})",
+                this.UseFilter ? "Filter" : this.UseIndex ? "Scan" : "",
+                this.Field);
+        }
     }
 }

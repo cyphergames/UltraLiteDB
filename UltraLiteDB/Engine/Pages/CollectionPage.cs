@@ -81,12 +81,10 @@ namespace UltraLiteDB
                 if (eq > 0)
                 {
                     index.Field = field.Substring(0, eq);
-                    index.Expression = field.Substring(eq + 1);
                 }
                 else
                 {
                     index.Field = field;
-                    index.Expression = "$." + field;
                 }
 
                 index.Unique = reader.ReadBoolean();
@@ -118,7 +116,7 @@ namespace UltraLiteDB
                 // write Field+Expression only if index are used
                 if(index.Field.Length > 0)
                 {
-                    writer.Write(index.Field + "=" + index.Expression);
+                    writer.Write(index.Field + "=" + "$."+index.Field);
                 }
                 else
                 {
@@ -151,16 +149,34 @@ namespace UltraLiteDB
         /// </summary>
         public CollectionIndex GetFreeIndex()
         {
-            if (this.Indexes[0].IsEmpty) return this.Indexes[0];
+            for (byte i = 0; i < this.Indexes.Length; i++)
+            {
+                if (this.Indexes[i].IsEmpty) return this.Indexes[i];
+            }
 
             throw LiteException.IndexLimitExceeded(this.CollectionName);
         }
 
+        /// <summary>
+        /// Get index from field name (index field name is case sensitive) - returns null if not found
+        /// </summary>
+        public CollectionIndex GetIndex(string field)
+        {
+            return this.Indexes.FirstOrDefault(x => x.Field == field);
+        }
 
         /// <summary>
         /// Get primary key index (_id index)
         /// </summary>
         public CollectionIndex PK { get { return this.Indexes[0]; } }
+
+        /// <summary>
+        /// Returns all used indexes
+        /// </summary>
+        public IEnumerable<CollectionIndex> GetIndexes(bool includePK)
+        {
+            return this.Indexes.Where(x => x.IsEmpty == false && x.Slot >= (includePK ? 0 : 1));
+        }
 
  
         #endregion

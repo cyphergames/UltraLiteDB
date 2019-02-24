@@ -12,7 +12,6 @@ namespace UltraLiteDB
         {
             this.Slot = index.Slot;
             this.Field = index.Field;
-            this.Expression = index.Expression;
             this.Unique = index.Unique;
             this.MaxLevel = index.MaxLevel;
         }
@@ -26,11 +25,6 @@ namespace UltraLiteDB
         /// Field index name
         /// </summary>
         public string Field { get; private set; }
-
-        /// <summary>
-        /// Index Expression
-        /// </summary>
-        public string Expression { get; private set; }
 
         /// <summary>
         /// Index is Unique?

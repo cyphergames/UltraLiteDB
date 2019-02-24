@@ -67,7 +67,7 @@ namespace UltraLiteDB
         {
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            return this.Find(collection, Query.EQ(id)).FirstOrDefault();
+            return this.Find(collection, Query.EQ("_id", id)).FirstOrDefault();
         }
 
 

@@ -74,7 +74,6 @@ namespace UltraLiteDB
             var pk = _indexer.CreateIndex(col);
 
             pk.Field = "_id";
-            pk.Expression = "$._id";
             pk.Unique = true;
 
             return col;
@@ -102,38 +101,38 @@ namespace UltraLiteDB
             var pages = new HashSet<uint>();
 
             // search for all data page and index page
-            var index = col.PK;
-            
-            // get all nodes from index
-            var nodes = _indexer.FindAll(index, Query.Ascending);
-
-            foreach (var node in nodes)
+            foreach (var index in col.GetIndexes(true))
             {
-                // if is PK index, add dataPages
-                if (index.Slot == 0)
+                // get all nodes from index
+                var nodes = _indexer.FindAll(index, Query.Ascending);
+
+                foreach (var node in nodes)
                 {
-                    pages.Add(node.DataBlock.PageID);
-
-                    // read datablock to check if there is any extended page
-                    var block = _data.GetBlock(node.DataBlock);
-
-                    if (block.ExtendPageID != uint.MaxValue)
+                    // if is PK index, add dataPages
+                    if (index.Slot == 0)
                     {
-                        _pager.DeletePage(block.ExtendPageID, true);
+                        pages.Add(node.DataBlock.PageID);
+
+                        // read datablock to check if there is any extended page
+                        var block = _data.GetBlock(node.DataBlock);
+
+                        if (block.ExtendPageID != uint.MaxValue)
+                        {
+                            _pager.DeletePage(block.ExtendPageID, true);
+                        }
                     }
+
+                    // memory checkpoint
+                    _trans.CheckPoint();
+
+                    // add index page to delete list page
+                    pages.Add(node.Position.PageID);
                 }
 
-                // memory checkpoint
-                _trans.CheckPoint();
-
-                // add index page to delete list page
-                pages.Add(node.Position.PageID);
+                // remove head+tail nodes in all indexes
+                pages.Add(index.HeadNode.PageID);
+                pages.Add(index.TailNode.PageID);
             }
-
-            // remove head+tail nodes in all indexes
-            pages.Add(index.HeadNode.PageID);
-            pages.Add(index.TailNode.PageID);
-            
 
             // and now, lets delete all this pages
             foreach (var pageID in pages)

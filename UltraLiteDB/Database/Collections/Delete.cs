@@ -22,7 +22,7 @@ namespace UltraLiteDB
         {
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            return this.Delete(Query.EQ(id)) > 0;
+            return this.Delete(Query.EQ("_id", id)) > 0;
         }
     }
 }

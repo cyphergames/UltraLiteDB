@@ -35,7 +35,7 @@ namespace UltraLiteDB
         {
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            return this.Find(Query.EQ(id)).SingleOrDefault();
+            return this.Find(Query.EQ("_id", id)).SingleOrDefault();
         }
 
         /// <summary>

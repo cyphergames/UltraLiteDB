@@ -8,17 +8,17 @@ namespace UltraLiteDB
         /// <summary>
         /// Returns first value from an index (first is min value)
         /// </summary>
-        public BsonValue Min(string collection)
+        public BsonValue Min(string collection, string field)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
-
+            if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
 
             var col = this.GetCollectionPage(collection, false);
 
             if (col == null) return BsonValue.MinValue;
 
             // get index (no index, no min)
-            var index = col.PK;
+            var index = col.GetIndex(field);
 
             if (index == null) return BsonValue.MinValue;
 
@@ -34,16 +34,17 @@ namespace UltraLiteDB
         /// <summary>
         /// Returns last value from an index (last is max value)
         /// </summary>
-        public BsonValue Max(string collection)
+        public BsonValue Max(string collection, string field)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
+            if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
 
             var col = this.GetCollectionPage(collection, false);
 
             if (col == null) return BsonValue.MaxValue;
 
             // get index (no index, no max)
-            var index = col.PK;
+            var index = col.GetIndex(field);
 
             if (index == null) return BsonValue.MaxValue;
 
@@ -72,13 +73,23 @@ namespace UltraLiteDB
             // run query in this collection
             var nodes = query.Run(col, _indexer);
 
-            // count distinct nodes based on DataBlock
-            return nodes
-                .Select(x => x.DataBlock)
-                .Distinct()
-                .LongCount();
-            
-        
+            if (query.UseFilter)
+            {
+                // count distinct documents
+                return nodes
+                    .Select(x => _bsonReader.Deserialize(_data.Read(x.DataBlock)).AsDocument)
+                    .Where(x => query.FilterDocument(x))
+                    .Distinct()
+                    .LongCount();
+            }
+            else
+            {
+                // count distinct nodes based on DataBlock
+                return nodes
+                    .Select(x => x.DataBlock)
+                    .Distinct()
+                    .LongCount();
+            }
         }
 
         /// <summary>
@@ -97,10 +108,21 @@ namespace UltraLiteDB
             // run query in this collection
             var nodes = query.Run(col, _indexer);
 
-            var first = nodes.FirstOrDefault();
+            if (query.UseFilter)
+            {
+                // check if has at least first document
+                return nodes
+                    .Select(x => _bsonReader.Deserialize(_data.Read(x.DataBlock)).AsDocument)
+                    .Where(x => query.FilterDocument(x))
+                    .Any();
+            }
+            else
+            {
+                var first = nodes.FirstOrDefault();
 
-            // check if has at least first node
-            return first != null;
+                // check if has at least first node
+                return first != null;
+            }
         
         }
     }

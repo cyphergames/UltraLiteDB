@@ -278,6 +278,41 @@ namespace UltraLiteDB
             }
         }
 
+        /// <summary>
+        /// Drop all indexes pages. Each index use a single page sequence
+        /// </summary>
+        public void DropIndex(CollectionIndex index)
+        {
+            var pages = new HashSet<uint>();
+            var nodes = this.FindAll(index, Query.Ascending);
+
+            // get reference for pageID from all index nodes
+            foreach (var node in nodes)
+            {
+                pages.Add(node.Position.PageID);
+
+                // for each node I need remove from node list datablock reference
+                var prevNode = this.GetNode(node.PrevNode);
+                var nextNode = this.GetNode(node.NextNode);
+
+                if (prevNode != null)
+                {
+                    prevNode.NextNode = node.NextNode;
+                    _pager.SetDirty(prevNode.Page);
+                }
+                if (nextNode != null)
+                {
+                    nextNode.PrevNode = node.PrevNode;
+                    _pager.SetDirty(nextNode.Page);
+                }
+            }
+
+            // now delete all pages
+            foreach (var pageID in pages)
+            {
+                _pager.DeletePage(pageID);
+            }
+        }
 
         /// <summary>
         /// Get a node inside a page using PageAddress - Returns null if address IsEmpty

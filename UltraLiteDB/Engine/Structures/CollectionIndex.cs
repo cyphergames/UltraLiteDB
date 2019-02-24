@@ -23,11 +23,6 @@ namespace UltraLiteDB
         public string Field { get; set; }
 
         /// <summary>
-        /// Get index expression (path or expr)
-        /// </summary>
-        public string Expression { get; set; }
-
-        /// <summary>
         /// Indicate if this index has distinct values only
         /// </summary>
         public bool Unique { get; set; }
@@ -76,7 +71,6 @@ namespace UltraLiteDB
         public void Clear()
         {
             this.Field = string.Empty;
-            this.Expression = string.Empty;
             this.Unique = false;
             this.HeadNode = PageAddress.Empty;
             this.FreeIndexPageID = uint.MaxValue;

@@ -72,7 +72,7 @@ namespace UltraLiteDB
             // ** this code can be removed when datafile change from 7 (HeaderPage.FILE_VERSION) **
             if (col.Sequence == 0 && col.DocumentCount > 0)
             {
-                var max = this.Max(col.CollectionName);
+                var max = this.Max(col.CollectionName, "_id");
 
                 // if max value is a number, convert to Sequence last value
                 // if not, just set sequence as document count
@@ -125,6 +125,24 @@ namespace UltraLiteDB
             // do link between index <-> data block
             pk.DataBlock = dataBlock.Position;
 
+            // for each index, insert new IndexNode
+            foreach (var index in col.GetIndexes(false))
+            {
+                // for each index, get all keys (support now multi-key) - gets distinct values only
+                // if index are unique, get single key only
+                var expr = new BsonFields(index.Field);
+                var keys = expr.Execute(doc, true);
+
+                // do a loop with all keys (multi-key supported)
+                foreach(var key in keys)
+                {
+                    // insert node
+                    var node = _indexer.AddNode(index, key, pk);
+
+                    // link my index node to data block address
+                    node.DataBlock = dataBlock.Position;
+                }
+            }
         }
     }
 }

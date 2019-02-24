@@ -74,18 +74,22 @@ namespace UltraLiteDB
         /// <summary>
         /// Returns the first/min value from a index field
         /// </summary>
-        public BsonValue Min()
+        public BsonValue Min(string field)
         {
-            return _engine.Value.Min(_name);
+            if (string.IsNullOrEmpty(field)) throw new ArgumentNullException(nameof(field));
+
+            return _engine.Value.Min(_name, field);
         }
 
 
         /// <summary>
         /// Returns the last/max value from a index field
         /// </summary>
-        public BsonValue Max()
+        public BsonValue Max(string field)
         {
-            return _engine.Value.Max(_name);
+            if (string.IsNullOrEmpty(field)) throw new ArgumentNullException(nameof(field));
+
+            return _engine.Value.Max(_name, field);
         }
 
 

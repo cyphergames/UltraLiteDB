@@ -71,7 +71,45 @@ namespace UltraLiteDB
             var bytes = _bsonWriter.Serialize(doc);
 
             // update data storage
-            _data.Update(col, pkNode.DataBlock, bytes);
+            var dataBlock = _data.Update(col, pkNode.DataBlock, bytes);
+
+            // get all non-pk index nodes from this data block
+            var allNodes = _indexer.GetNodeList(pkNode, false).ToArray();
+
+            // delete/insert indexes - do not touch on PK
+            foreach (var index in col.GetIndexes(false))
+            {
+                var expr = new BsonFields(index.Field);
+
+                // getting all keys do check
+                var keys = expr.Execute(doc).ToArray();
+
+                // get a list of to delete nodes (using ToArray to resolve now)
+                var toDelete = allNodes
+                    .Where(x => x.Slot == index.Slot && !keys.Any(k => k == x.Key))
+                    .ToArray();
+
+                // get a list of to insert nodes (using ToArray to resolve now)
+                var toInsert = keys
+                    .Where(x => !allNodes.Any(k => k.Slot == index.Slot && k.Key == x))
+                    .ToArray();
+
+                // delete changed index nodes
+                foreach (var node in toDelete)
+                {
+                    _indexer.Delete(index, node.Position);
+                }
+
+                // insert new nodes
+                foreach (var key in toInsert)
+                {
+                    // and add a new one
+                    var node = _indexer.AddNode(index, key, pkNode);
+
+                    // link my node to data block
+                    node.DataBlock = dataBlock.Position;
+                }
+            }
 
             return true;
         }

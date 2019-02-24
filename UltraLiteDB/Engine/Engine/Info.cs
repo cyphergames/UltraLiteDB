@@ -29,7 +29,6 @@ namespace UltraLiteDB
                         {
                             {  "slot", i.Slot },
                             {  "field", i.Field },
-                            {  "expression", i.Expression },
                             {  "unique", i.Unique }
                         }))
                     }

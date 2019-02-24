@@ -5,7 +5,7 @@ UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Any
 ## Major features missing from LiteDB
 
 - Due to reflection limitations, there is no automatic POCO mapper. You must manually convert your data to and from BSON format. It's an inconvenience, especially if you have many object types of deep complex object trees. On the other hand, it's an opportunity to carefully consider your data's encoding, with an eye towards forwards binary compatibility.
-- Due to linq limitations, there are no secondary indexes. Each collection is indexed only by a single primary key.
+- Due to linq limitations, there are no expressions. Queries and indexes are limited to simple top level fields only.
 - Thread and file locking overhead has been removed, databases must be accessed from a single thread, which should not be an issue in Unity.
 - File storage and streaming have been removed as not needed in a Unity setting.
 - No cross-collection document referencing
@@ -14,7 +14,7 @@ UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Any
 ## So what's still there?
 
 - A very fast way to save, load and update BSON-encoded data into a compact, encrypted, managable single file.
-- Basic queries on the primary key (all, less than, greater than, between, in)
+- Basic queries on the primary key and user-created indexes (all, less than, greater than, between, in, etc)
 - Simple API similar to MongoDB
 - File format compatibility with LiteDB
 - 100% C# code for .NETStandard 2.0 Unity preset in a single DLL (less than 123kb)
@@ -42,7 +42,7 @@ It could also be useful for large amounts of read-only data as well, where you n
 
 For basic CRUD operations, the [LiteDB documentation](https://github.com/mbdavid/LiteDB/wiki) largely applies to UltraLiteDB.
 
-The biggest difference is that your collections are not generic types, they only store BsonDocument classes. There are no APIs for managing secondary indexes. Query elements that take a field parameter in LiteDB don't take one in UltraLiteDB, since the only field that can be queried is the primary key.
+The biggest difference is that your collections are not generic types, they only store BsonDocument classes. Any query or index method using a linq method are also missing.
 
 ## Installing in a Unity project
 

@@ -13,7 +13,7 @@ namespace UltraLiteDB
         private int _order;
 
         public QueryNot(Query query, int order)
-            : base()
+            : base("_id")
         {
             _query = query;
             _order = order;
@@ -21,18 +21,34 @@ namespace UltraLiteDB
 
         internal override IEnumerable<IndexNode> Run(CollectionPage col, IndexService indexer)
         {
-            // run base query
+           // run base query
             var result = _query.Run(col, indexer);
 
-            // if is by index, resolve here
-            var all = new QueryAll(_order).Run(col, indexer);
+            this.UseIndex = _query.UseIndex;
+            this.UseFilter = _query.UseFilter;
 
-            return all.Except(result, new IndexNodeComparer());
+            if (_query.UseIndex)
+            {
+                // if is by index, resolve here
+                var all = new QueryAll("_id", _order).Run(col, indexer);
+
+                return all.Except(result, new IndexNodeComparer());
+            }
+            else
+            {
+                // if is by document, must return all nodes to be ExecuteDocument after
+                return result;
+            }
         }
 
         internal override IEnumerable<IndexNode> ExecuteIndex(IndexService indexer, CollectionIndex index)
         {
             throw new NotSupportedException();
+        }
+
+        internal override bool FilterDocument(BsonDocument doc)
+        {
+            return !_query.FilterDocument(doc);
         }
 
         public override string ToString()

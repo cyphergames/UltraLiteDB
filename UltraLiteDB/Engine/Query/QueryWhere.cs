@@ -12,8 +12,8 @@ namespace UltraLiteDB
         private Func<BsonValue, bool> _func;
         private int _order;
 
-        public QueryWhere(Func<BsonValue, bool> func, int order)
-            : base()
+        public QueryWhere(string field, Func<BsonValue, bool> func, int order)
+            : base(field)
         {
             _func = func;
             _order = order;
@@ -26,5 +26,18 @@ namespace UltraLiteDB
                 .Where(i => _func(i.Key));
         }
 
+        internal override bool FilterDocument(BsonDocument doc)
+        {
+            return this.Expression.Execute(doc, true)
+                .Any(x => _func(x));
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}({1}[{2}])",
+                this.UseFilter ? "Filter" : this.UseIndex ? "Scan" : "",
+                _func.ToString(),
+                this.Field);
+        }
     }
 }
