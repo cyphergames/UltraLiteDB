@@ -100,6 +100,14 @@ void DatabaseTest()
 }
 ```
 
+## Building
+
+To build UltraLiteDB yourself:
+
+1. Make sure you have a recent .NET Core SDK installed (https://dotnet.microsoft.com/download)
+2. Download or clone this repository
+3. dotnet build -c Release
+4. Your new DLL is at ./UltraLiteDB/bin/Release/netstandard2.0/UltraLiteDB.dll
 
 ## License
 
