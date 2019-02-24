@@ -17,7 +17,7 @@ UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Any
 - Basic queries on the primary key and user-created indexes (all, less than, greater than, between, in, etc)
 - Simple API similar to MongoDB
 - File format compatibility with LiteDB
-- 100% C# code for .NETStandard 2.0 Unity preset in a single DLL (less than 123kb)
+- 100% C# code for .NETStandard 2.0 Unity preset in a single DLL (~136kb)
 - ACID in document/operation level
 - Data recovery after write failure (journal mode)
 - Datafile encryption using DES (AES) cryptography
