@@ -54,6 +54,16 @@ namespace UltraLiteDB
         }
 
         /// <summary>
+        /// Implements bulk upsert of documents in a collection. Usefull when need lots of documents.
+        /// </summary>
+        public int UpsertBulk(IEnumerable<BsonDocument> docs, int batchSize = 5000)
+        {
+            if (docs == null) throw new ArgumentNullException(nameof(docs));
+
+            return _engine.Value.UpsertBulk(_name, this.GetBsonDocs(docs), batchSize, _autoId);
+        }
+
+        /// <summary>
         /// Convert each T document in a BsonDocument, setting autoId for each one
         /// </summary>
         private IEnumerable<BsonDocument> GetBsonDocs(IEnumerable<BsonDocument> documents)

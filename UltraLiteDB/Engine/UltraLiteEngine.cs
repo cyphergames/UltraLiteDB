@@ -189,6 +189,8 @@ namespace UltraLiteDB
 
                 _trans.PersistDirtyPages();
 
+                _trans.CheckPoint();
+                
                 return result;
             }
             catch (Exception ex)
