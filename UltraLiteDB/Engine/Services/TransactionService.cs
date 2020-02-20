@@ -73,6 +73,9 @@ namespace UltraLiteDB
 
                 // mark header as recovery before start writing (in journal, must keep recovery = false)
                 header.Recovery = true;
+
+                // flush to disk to ensure journal is committed to disk before proceeding
+                _disk.Flush();
             }
             else
             {
@@ -80,10 +83,22 @@ namespace UltraLiteDB
                 _disk.SetLength(BasePage.GetSizeOfPages(header.LastPageID + 1));
             }
 
+            // write header page first. if header.Recovery == true, this ensures it's written to disk *before* we start changing pages
+            var headerPage = _cache.GetPage(0);
+            var headerBuffer = headerPage.WritePage();
+            _disk.WritePage(0, headerBuffer);
+            _disk.Flush();
+
             // get all dirty page stating from Header page (SortedList)
             // header page (id=0) always must be first page to write on disk because it's will mark disk as "in recovery"
             foreach (var page in _cache.GetDirtyPages())
             {
+                // we've already written the header, so skip it
+                if (page.PageID == 0)
+                {
+                    continue;
+                }
+
                 // page.WritePage() updated DiskData with new rendered buffer
                 var buffer = _crypto == null || page.PageID == 0 ? 
                     page.WritePage() : 
@@ -94,6 +109,9 @@ namespace UltraLiteDB
 
             if (_disk.IsJournalEnabled)
             {
+                // ensure changed pages are persisted to disk
+                _disk.Flush();
+
                 // re-write header page but now with recovery=false
                 header.Recovery = false;
 
