@@ -57,6 +57,125 @@ namespace UltraLiteDB
             }
         }
 
+        public bool? GetBool(string key)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsBoolean) return value;
+            }
+            return null;
+        }
+
+        public bool GetBoolOrDefault(string key, bool def)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsBoolean) return value;
+            }
+            return def;
+        }
+
+        public string GetString(string key)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsString) return value;
+            }
+            return null;
+        }
+
+        public string GetStringOrDefault(string key, string def)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsString) return value;
+            }
+            return def;
+        }
+
+        public int? GetInt32(string key)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsInt32;
+            }
+            return null;
+        }
+
+        public int GetInt32OrDefault(string key, int def)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsInt32;
+            }
+            return def;
+        }
+
+        public long? GetInt64(string key)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsInt64;
+            }
+            return null;
+        }
+
+        public long GetInt64OrDefault(string key, long def)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsInt64;
+            }
+            return def;
+        }
+
+        public float? GetSingle(string key)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsSingle;
+            }
+            return null;
+        }
+
+        public float GetSingleOrDefault(string key, float def)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsSingle;
+            }
+            return def;
+        }
+
+        public double? GetDouble(string key)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsDouble;
+            }
+            return null;
+        }
+        public double GetDoubleOrDefault(string key, double def)
+        {
+            BsonValue value;
+            if(this.RawValue.TryGetValue(key, out value))
+            {
+                if(value.IsNumber) return value.AsDouble;
+            }
+            return def;
+        }
+
         #region CompareTo
 
         public override int CompareTo(BsonValue other)

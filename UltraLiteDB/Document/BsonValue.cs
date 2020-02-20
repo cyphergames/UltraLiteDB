@@ -171,7 +171,7 @@ namespace UltraLiteDB
         public long AsInt64 => Convert.ToInt64(this.RawValue);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public double AsSingle => Convert.ToSingle(this.RawValue);
+        public float AsSingle => Convert.ToSingle(this.RawValue);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public double AsDouble => Convert.ToDouble(this.RawValue);
