@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// Not is an Index Scan operation
-    /// </summary>
-    internal class QueryNotEquals : Query
+	/// <summary>
+	/// Not is an Index Scan operation
+	/// </summary>
+	internal class QueryNotEquals : Query
     {
         private BsonValue _value;
 

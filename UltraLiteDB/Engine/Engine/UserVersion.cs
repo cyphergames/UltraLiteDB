@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace UltraLiteDB
 {
     public partial class UltraLiteEngine

@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace UltraLiteDB
+﻿namespace UltraLiteDB
 {
-    /// <summary>
-    /// Datafile open options (for FileDiskService)
-    /// </summary>
-    public class FileOptions
+	/// <summary>
+	/// Datafile open options (for FileDiskService)
+	/// </summary>
+	public class FileOptions
     {
         public bool Journal { get; set; }
         public long InitialSize { get; set; }

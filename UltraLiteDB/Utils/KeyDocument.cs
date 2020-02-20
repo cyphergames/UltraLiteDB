@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace UltraLiteDB
 {
-    internal class KeyDocument
+	internal class KeyDocument
     {
         public BsonValue Key { get; set; }
         public BsonDocument Document { get; set; }

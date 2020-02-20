@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// Represent a index node inside a Index Page
-    /// </summary>
-    internal class IndexNode
+	/// <summary>
+	/// Represent a index node inside a Index Page
+	/// </summary>
+	internal class IndexNode
     {
         public const int INDEX_NODE_FIXED_SIZE = 2 + // Position.Index (ushort)
                                                  1 + // Levels (byte)

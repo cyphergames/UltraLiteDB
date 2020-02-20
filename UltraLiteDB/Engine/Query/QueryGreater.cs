@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UltraLiteDB
 {
-    internal class QueryGreater : Query
+	internal class QueryGreater : Query
     {
         private BsonValue _value;
         private bool _equals;

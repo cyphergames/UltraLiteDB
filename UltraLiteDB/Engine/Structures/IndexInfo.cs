@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace UltraLiteDB
+﻿namespace UltraLiteDB
 {
-    /// <summary>
-    /// Represent a index information
-    /// </summary>
-    public class IndexInfo
+	/// <summary>
+	/// Represent a index information
+	/// </summary>
+	public class IndexInfo
     {
         internal IndexInfo(CollectionIndex index)
         {

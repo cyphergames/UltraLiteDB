@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// Include all components to be used in execution of a qery
-    /// </summary>
-    internal class QueryCursor : IDisposable
+	/// <summary>
+	/// Include all components to be used in execution of a qery
+	/// </summary>
+	internal class QueryCursor : IDisposable
     {
         private int _position;
         private int _skip;

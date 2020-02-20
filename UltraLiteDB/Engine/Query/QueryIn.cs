@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UltraLiteDB
 {
-    internal class QueryIn : Query
+	internal class QueryIn : Query
     {
         private IEnumerable<BsonValue> _values;
 

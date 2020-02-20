@@ -1,13 +1,11 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// A StringScanner is state machine used in text parsers based on regular expressions
-    /// </summary>
-    public class StringScanner
+	/// <summary>
+	/// A StringScanner is state machine used in text parsers based on regular expressions
+	/// </summary>
+	public class StringScanner
     {
         public string Source { get; private set; }
         public int Index { get; set; }

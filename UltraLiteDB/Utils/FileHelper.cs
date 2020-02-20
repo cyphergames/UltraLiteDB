@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// A simple file helper tool with static methods
-    /// </summary>
-    internal static class FileHelper
+	/// <summary>
+	/// A simple file helper tool with static methods
+	/// </summary>
+	internal static class FileHelper
     {
         /// <summary>
         /// Create a temp filename based on original filename - checks if file exists (if exists, append counter number)

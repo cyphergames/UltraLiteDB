@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace UltraLiteDB
 {
@@ -17,17 +15,6 @@ namespace UltraLiteDB
             if (string.IsNullOrEmpty(field)) throw new ArgumentNullException(nameof(field));
 
             return _engine.Value.EnsureIndex(_name, field, unique);
-        }
-
-
-        /// <summary>
-        /// Create a new permanent index in all documents inside this collections if index not exists already.
-        /// </summary>
-        /// <param name="property">Property linq expression</param>
-        /// <param name="unique">Create a unique keys index?</param>
-        public bool EnsureIndex<K>(Expression<Func<BsonDocument, K>> property, bool unique = false)
-        {
-            return this.EnsureIndex(property, unique);
         }
 
 

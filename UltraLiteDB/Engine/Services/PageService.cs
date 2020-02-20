@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UltraLiteDB
 {
-    internal class PageService
+	internal class PageService
     {
         private CacheService _cache;
         private IDiskService _disk;

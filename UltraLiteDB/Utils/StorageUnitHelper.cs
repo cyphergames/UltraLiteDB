@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// Parse/Format storage unit format (kb/mb/gb)
-    /// </summary>
-    internal class StorageUnitHelper
+	/// <summary>
+	/// Parse/Format storage unit format (kb/mb/gb)
+	/// </summary>
+	internal class StorageUnitHelper
     {
 
 

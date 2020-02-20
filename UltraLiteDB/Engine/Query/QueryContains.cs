@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UltraLiteDB
 {
-    /// <summary>
-    /// Contains query do not work with index, only full scan
-    /// </summary>
-    internal class QueryContains : Query
+	/// <summary>
+	/// Contains query do not work with index, only full scan
+	/// </summary>
+	internal class QueryContains : Query
     {
         private BsonValue _value;
 

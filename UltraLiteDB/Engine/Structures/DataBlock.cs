@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace UltraLiteDB
+﻿namespace UltraLiteDB
 {
-    internal class DataBlock
+	internal class DataBlock
     {
         public const int DATA_BLOCK_FIXED_SIZE = 2 + // Position.Index (ushort)
                                                  4 + // ExtendedPageID (uint)
