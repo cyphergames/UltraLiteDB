@@ -133,7 +133,7 @@ namespace UltraLiteDB
         public void SetLength(long fileSize)
         {
             // checks if new fileSize will exceed limit size
-            if (fileSize > _options.LimitSize) throw LiteException.FileSizeExceeded(_options.LimitSize);
+            if (fileSize > _options.LimitSize) throw UltraLiteException.FileSizeExceeded(_options.LimitSize);
 
             // fileSize parameter tell me final size of data file - helpful to extend first datafile
             _stream.SetLength(fileSize);

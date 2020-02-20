@@ -72,7 +72,7 @@ namespace UltraLiteDB
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (field.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(field));
 
-            if (field == "_id") throw LiteException.IndexDropId();
+            if (field == "_id") throw UltraLiteException.IndexDropId();
 
             return this.Transaction<bool>(collection, false, (col) =>
             {

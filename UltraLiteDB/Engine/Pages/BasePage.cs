@@ -148,7 +148,7 @@ namespace UltraLiteDB
 
             if (pageID == 0 && (byte)pageType > 5)
             {
-                throw LiteException.InvalidDatabase();
+                throw UltraLiteException.InvalidDatabase();
             }
 
             var page = CreateInstance(pageID, pageType);

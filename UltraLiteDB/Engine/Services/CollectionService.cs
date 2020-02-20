@@ -46,7 +46,7 @@ namespace UltraLiteDB
         public CollectionPage Add(string name)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-            if (!CollectionPage.NamePattern.IsMatch(name)) throw LiteException.InvalidFormat(name);
+            if (!CollectionPage.NamePattern.IsMatch(name)) throw UltraLiteException.InvalidFormat(name);
 
             _log.Write(Logger.COMMAND, "creating new collection '{0}'", name);
 
@@ -56,7 +56,7 @@ namespace UltraLiteDB
             // check limit count (8 bytes per collection = 4 to string length, 4 for uint pageID)
             if (header.CollectionPages.Sum(x => x.Key.Length + 8) + name.Length + 8 >= CollectionPage.MAX_COLLECTIONS_SIZE)
             {
-                throw LiteException.CollectionLimitExceeded(CollectionPage.MAX_COLLECTIONS_SIZE);
+                throw UltraLiteException.CollectionLimitExceeded(CollectionPage.MAX_COLLECTIONS_SIZE);
             }
 
             // get new collection page (marked as dirty)

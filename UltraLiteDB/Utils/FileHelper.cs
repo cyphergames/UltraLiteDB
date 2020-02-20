@@ -66,7 +66,7 @@ namespace UltraLiteDB
             }
             while (DateTime.UtcNow < timer);
 
-            throw LiteException.LockTimeout(timeout);
+            throw UltraLiteException.LockTimeout(timeout);
         }
     }
 }

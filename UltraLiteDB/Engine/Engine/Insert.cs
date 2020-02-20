@@ -126,7 +126,7 @@ namespace UltraLiteDB
             // test if _id is a valid type
             if (id.IsNull || id.IsMinValue || id.IsMaxValue)
             {
-                throw LiteException.InvalidDataType("_id", id);
+                throw UltraLiteException.InvalidDataType("_id", id);
             }
 
             _log.Write(Logger.COMMAND, "insert document on '{0}' :: _id = {1}", col.CollectionName, id.RawValue);

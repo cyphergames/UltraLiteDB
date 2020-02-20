@@ -154,7 +154,7 @@ namespace UltraLiteDB
                 if (this.Indexes[i].IsEmpty) return this.Indexes[i];
             }
 
-            throw LiteException.IndexLimitExceeded(this.CollectionName);
+            throw UltraLiteException.IndexLimitExceeded(this.CollectionName);
         }
 
         /// <summary>

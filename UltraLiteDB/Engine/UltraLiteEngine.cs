@@ -114,7 +114,7 @@ namespace UltraLiteDB
                 // compare header password with user password even if not passed password (datafile can have password)
                 if (sha1.BinaryCompareTo(header.Password) != 0)
                 {
-                    throw LiteException.DatabaseWrongPassword();
+                    throw UltraLiteException.DatabaseWrongPassword();
                 }
 
                 // initialize AES encryptor

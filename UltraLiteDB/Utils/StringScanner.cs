@@ -121,7 +121,7 @@ namespace UltraLiteDB
         {
             this.Scan(@"\s*");
 
-            if (!this.HasTerminated) throw LiteException.SyntaxError(this);
+            if (!this.HasTerminated) throw UltraLiteException.SyntaxError(this);
         }
     }
 }

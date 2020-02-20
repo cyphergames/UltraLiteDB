@@ -92,7 +92,7 @@ namespace UltraLiteDB
             var keyLength = key.GetBytesCount(false);
 
             // test for index key maxlength
-            if (keyLength > MAX_INDEX_LENGTH) throw LiteException.IndexKeyTooLong();
+            if (keyLength > MAX_INDEX_LENGTH) throw UltraLiteException.IndexKeyTooLong();
 
             // creating a new index node
             var node = new IndexNode(level)
@@ -132,7 +132,7 @@ namespace UltraLiteDB
                     var diff = cache.Key.CompareTo(key);
 
                     // if unique and diff = 0, throw index exception (must rollback transaction - others nodes can be dirty)
-                    if (diff == 0 && index.Unique) throw LiteException.IndexDuplicateKey(index.Field, key);
+                    if (diff == 0 && index.Unique) throw UltraLiteException.IndexDuplicateKey(index.Field, key);
 
                     if (diff == 1) break;
                 }

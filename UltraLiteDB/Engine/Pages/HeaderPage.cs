@@ -82,8 +82,8 @@ namespace UltraLiteDB
             var info = reader.ReadString(HEADER_INFO.Length);
             var ver = reader.ReadByte();
 
-            if (info != HEADER_INFO) throw LiteException.InvalidDatabase();
-            if (ver != FILE_VERSION) throw LiteException.InvalidDatabaseVersion(ver);
+            if (info != HEADER_INFO) throw UltraLiteException.InvalidDatabase();
+            if (ver != FILE_VERSION) throw UltraLiteException.InvalidDatabaseVersion(ver);
 
             this.ChangeID = reader.ReadUInt16();
             this.FreeEmptyPageID = reader.ReadUInt32();

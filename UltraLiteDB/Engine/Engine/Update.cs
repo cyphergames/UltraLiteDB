@@ -56,7 +56,7 @@ namespace UltraLiteDB
             // validate id for null, min/max values
             if (id.IsNull || id.IsMinValue || id.IsMaxValue)
             {
-                throw LiteException.InvalidDataType("_id", id);
+                throw UltraLiteException.InvalidDataType("_id", id);
             }
 
             _log.Write(Logger.COMMAND, "update document on '{0}' :: _id = {1}", col.CollectionName, id.RawValue);

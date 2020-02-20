@@ -92,7 +92,7 @@ namespace UltraLiteDB
             }
             catch (Exception)
             {
-                throw new LiteException("Invalid connection string value type for [" + key + "]");
+                throw new UltraLiteException("Invalid connection string value type for [" + key + "]");
             }
         }
 

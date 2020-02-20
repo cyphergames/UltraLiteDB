@@ -54,7 +54,7 @@ namespace UltraLiteDB
                 // check if newName already exists
                 if (this.GetCollectionNames().Contains(newName, StringComparer.OrdinalIgnoreCase))
                 {
-                    throw LiteException.AlreadyExistsCollectionName(newName);
+                    throw UltraLiteException.AlreadyExistsCollectionName(newName);
                 }
 
                 // change collection name and save
