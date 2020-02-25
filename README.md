@@ -64,7 +64,7 @@ void DatabaseTest()
     var col = db.GetCollection("savegames");
 
     // Create a new character document
-	var character = new BsonDocument();
+    var character = new BsonDocument();
     character["Name"] = "John Doe";
     character["Equipment"] = new string[] { "sword", "gnome hat" };
     character["Level"] = 1;
@@ -79,7 +79,7 @@ void DatabaseTest()
     col.Update(character);
 
     // Insert a document with a manually chosen Id
-	var character2 = new BsonDocument();
+    var character2 = new BsonDocument();
     character2["_id"] = 10;
     character2["Name"] = "Test Bob";
     character2["Level"] = 10;
