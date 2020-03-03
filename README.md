@@ -4,7 +4,6 @@ UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Any
 
 ## Major features missing from LiteDB
 
-- Due to reflection limitations, there is no automatic POCO mapper. You must manually convert your data to and from BSON format. It's an inconvenience, especially if you have many object types of deep complex object trees. On the other hand, it's an opportunity to carefully consider your data's encoding, with an eye towards forwards binary compatibility.
 - Due to linq limitations, there are no expressions. Queries and indexes are limited to simple top level fields only.
 - Thread and file locking overhead has been removed, databases must be accessed from a single thread, which should not be an issue in Unity.
 - File storage and streaming have been removed as not needed in a Unity setting.
@@ -13,6 +12,7 @@ UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Any
 
 ## So what's still there?
 
+- The POCO to BSON mapper allows you to BSON-encode most any C# object or struct with little work.
 - A very fast way to save, load and update BSON-encoded data into a compact, encrypted, managable single file.
 - Basic queries on the primary key and user-created indexes (all, less than, greater than, between, in, etc)
 - Simple API similar to MongoDB
@@ -90,7 +90,7 @@ void DatabaseTest()
     List<BsonDocument> allCharacters = new List<BsonDocument>(characters.FindAll());
 
     // Delete something
-    col.Delete(new BsonValue(10));
+    col.Delete(10);
 
     // Upsert (Update if present or insert if not)
     col.Upsert(character);
