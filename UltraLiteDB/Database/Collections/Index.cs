@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UltraLiteDB
 {
-    public partial class UltraLiteCollection
+    public partial class UltraLiteCollection<T>
     {
         /// <summary>
         /// Create a new permanent index in all documents inside this collections if index not exists already. Returns true if index was created or false if already exits

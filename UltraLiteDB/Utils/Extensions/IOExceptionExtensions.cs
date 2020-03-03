@@ -40,11 +40,7 @@ namespace UltraLiteDB
         public static void WaitFor(int ms)
         {
             // http://stackoverflow.com/questions/12641223/thread-sleep-replacement-in-net-for-windows-store
-#if HAVE_TASK_DELAY
             System.Threading.Tasks.Task.Delay(ms).Wait();
-#else
-            System.Threading.Thread.Sleep(ms);
-#endif
         }
     }
 }

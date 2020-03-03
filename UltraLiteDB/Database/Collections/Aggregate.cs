@@ -2,7 +2,7 @@
 
 namespace UltraLiteDB
 {
-    public partial class UltraLiteCollection
+    public partial class UltraLiteCollection<T>
     {
         #region Count
 

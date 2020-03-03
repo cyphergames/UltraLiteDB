@@ -2,7 +2,7 @@
 
 namespace UltraLiteDB
 {
-    public partial class UltraLiteCollection
+    public partial class UltraLiteCollection<T>
     {
         /// <summary>
         /// Remove all document based on a Query object. Returns removed document counts

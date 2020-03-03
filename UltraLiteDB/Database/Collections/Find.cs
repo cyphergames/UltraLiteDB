@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace UltraLiteDB
 {
-    public partial class UltraLiteCollection
+    public partial class UltraLiteCollection<T>
     {
         #region Find
 
         /// <summary>
         /// Find documents inside a collection using Query object.
         /// </summary>
-        public IEnumerable<BsonDocument> Find(Query query, int skip = 0, int limit = int.MaxValue)
+        public IEnumerable<T> Find(Query query, int skip = 0, int limit = int.MaxValue)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
 
@@ -19,7 +19,10 @@ namespace UltraLiteDB
 
             foreach(var doc in docs)
             {
-                yield return doc;
+                // get object from BsonDocument
+                var obj = _mapper.ToObject<T>(doc);
+
+                yield return obj;
             }
         }
 
@@ -31,7 +34,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Find a document using Document Id. Returns null if not found.
         /// </summary>
-        public BsonDocument FindById(BsonValue id)
+        public T FindById(BsonValue id)
         {
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
@@ -41,7 +44,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Find the first document using Query object. Returns null if not found. Must have index on query expression.
         /// </summary>
-        public BsonDocument FindOne(Query query)
+        public T FindOne(Query query)
         {
             return this.Find(query).FirstOrDefault();
         }
@@ -50,7 +53,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Returns all documents inside collection order by _id index.
         /// </summary>
-        public IEnumerable<BsonDocument> FindAll()
+        public IEnumerable<T> FindAll()
         {
             return this.Find(Query.All());
         }

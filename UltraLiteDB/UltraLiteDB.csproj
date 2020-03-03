@@ -6,10 +6,10 @@
 
   <PropertyGroup>
     <PackageId>UltraLiteDB</PackageId>
-    <Version>1.3.0</Version>
-    <AssemblyVersion>1.3.0.0</AssemblyVersion>
-    <FileVersion>1.3.0</FileVersion>
-    <VersionPrefix>1.3.0</VersionPrefix>
+    <Version>1.4.0</Version>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0</FileVersion>
+    <VersionPrefix>1.4.0</VersionPrefix>
     <Authors>Maurício David, Jeremy Friesen</Authors>
     <Product>UltraLiteDB</Product>
     <Description>UltraLiteDB - An ultralightweight embedded .NET NoSQL document store in a single datafile</Description>
@@ -37,7 +37,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>NETSTANDARD20;HAVE_FLUSH_DISK;HAVE_SYNC_OVER_ASYNC;HAVE_LOCK;HAVE_TYPE_INFO;HAVE_EXPRESSION_ASSIGN;HAVE_TASK_DELAY;HAVE_ATTR_DEFINED</DefineConstants>
+    <DefineConstants>NETSTANDARD20;</DefineConstants>
   </PropertyGroup>
 
 

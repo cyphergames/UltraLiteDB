@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Reflection;
 
 namespace UltraLiteDB
 {
@@ -27,8 +27,13 @@ namespace UltraLiteDB
         public const int SYNTAX_ERROR = 127;
 
         public const int INVALID_FORMAT = 200;
+        public const int DOCUMENT_MAX_DEPTH = 201;
+        public const int INVALID_CTOR = 202;
         public const int UNEXPECTED_TOKEN = 203;
         public const int INVALID_DATA_TYPE = 204;
+        public const int PROPERTY_NOT_MAPPED = 206;
+        public const int INVALID_TYPED_NAME = 207;
+
 
 
         #endregion
@@ -46,6 +51,12 @@ namespace UltraLiteDB
 
         internal UltraLiteException(int code, string message, params object[] args)
             : base(string.Format(message, args))
+        {
+            this.ErrorCode = code;
+        }
+
+        internal UltraLiteException (int code, Exception inner, string message, params object[] args)
+        : base (string.Format (message, args), inner)
         {
             this.ErrorCode = code;
         }
@@ -124,11 +135,6 @@ namespace UltraLiteDB
             return new UltraLiteException(INVALID_FORMAT, "Invalid format: {0}", field);
         }
 
-        internal static UltraLiteException InvalidDataType(string field, BsonValue value)
-        {
-            return new UltraLiteException(INVALID_DATA_TYPE, "Invalid BSON data type '{0}' on field '{1}'.", value.Type, field);
-        }
-
         internal static UltraLiteException SyntaxError(StringScanner s, string message = "Unexpected token")
         {
             return new UltraLiteException(SYNTAX_ERROR, message)
@@ -148,6 +154,52 @@ namespace UltraLiteDB
             {
                 Position = position
             };
+        }
+
+        #endregion
+
+        #region Document/Mapper Errors
+
+        internal static UltraLiteException InvalidFormat(string field, string format)
+        {
+            return new UltraLiteException(INVALID_FORMAT, "Invalid format: {0}", field);
+        }
+
+        internal static UltraLiteException DocumentMaxDepth(int depth, Type type)
+        {
+            return new UltraLiteException(DOCUMENT_MAX_DEPTH, "Document has more than {0} nested documents in '{1}'. Check for circular references.", depth, type == null ? "-" : type.Name);
+        }
+
+        internal static UltraLiteException InvalidCtor(Type type, Exception inner)
+        {
+            return new UltraLiteException(INVALID_CTOR, inner, "Failed to create instance for type '{0}' from assembly '{1}'. Checks if the class has a public constructor with no parameters.", type.FullName, type.AssemblyQualifiedName);
+        }
+
+        internal static UltraLiteException UnexpectedToken(string token)
+        {
+            return new UltraLiteException(UNEXPECTED_TOKEN, "Unexpected JSON token: {0}", token);
+        }
+
+        internal static UltraLiteException InvalidDataType(string field, BsonValue value)
+        {
+            return new UltraLiteException(INVALID_DATA_TYPE, "Invalid BSON data type '{0}' on field '{1}'.", value.Type, field);
+        }
+
+        public const int PROPERTY_READ_WRITE = 204;
+
+        internal static UltraLiteException PropertyReadWrite(PropertyInfo prop)
+        {
+            return new UltraLiteException(PROPERTY_READ_WRITE, "'{0}' property must have public getter and setter.", prop.Name);
+        }
+
+        internal static UltraLiteException PropertyNotMapped(string name)
+        {
+            return new UltraLiteException(PROPERTY_NOT_MAPPED, "Property '{0}' was not mapped into BsonDocument.", name);
+        }
+
+        internal static UltraLiteException InvalidTypedName(string type)
+        {
+            return new UltraLiteException(INVALID_TYPED_NAME, "Type '{0}' not found in current domain (_type format is 'Type.FullName, AssemblyName').", type);
         }
 
         #endregion

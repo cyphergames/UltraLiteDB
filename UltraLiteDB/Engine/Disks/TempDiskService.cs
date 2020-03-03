@@ -174,19 +174,10 @@ namespace UltraLiteDB
         /// </summary>
         private FileStream CreateFileStream(string path, System.IO.FileMode mode, FileAccess access, FileShare share)
         {
-#if HAVE_SYNC_OVER_ASYNC
-            // if (_options.Async)
-            {
-                return System.Threading.Tasks.Task.Run(() => new FileStream(path, mode, access, share, BasePage.PAGE_SIZE))
-                    .ConfigureAwait(false)
-                    .GetAwaiter()
-                    .GetResult();
-            }
-#else
-            return new FileStream(path, mode, access, share,
-                BasePage.PAGE_SIZE,
-                System.IO.FileOptions.RandomAccess);
-#endif
+            return System.Threading.Tasks.Task.Run(() => new FileStream(path, mode, access, share, BasePage.PAGE_SIZE))
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
         }
 
         #endregion

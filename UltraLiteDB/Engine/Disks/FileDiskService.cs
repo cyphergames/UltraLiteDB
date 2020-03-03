@@ -233,11 +233,7 @@ namespace UltraLiteDB
         {
             _log.Write(Logger.DISK, "flush data from memory to disk");
 
-#if HAVE_FLUSH_DISK
             _stream.Flush(_options.Flush);
-#else
-            _stream.Flush();
-#endif
         }
 
         #endregion
@@ -250,7 +246,6 @@ namespace UltraLiteDB
         /// </summary>
         private FileStream CreateFileStream(string path, System.IO.FileMode mode, FileAccess access, FileShare share)
         {
-#if HAVE_SYNC_OVER_ASYNC
             if (_options.Async)
             {
                 return System.Threading.Tasks.Task.Run(() => new FileStream(path, mode, access, share, BasePage.PAGE_SIZE))
@@ -258,7 +253,7 @@ namespace UltraLiteDB
                     .GetAwaiter()
                     .GetResult();
             }
-#endif
+
             return new FileStream(path, mode, access, share, 
                 BasePage.PAGE_SIZE,
                 System.IO.FileOptions.RandomAccess);

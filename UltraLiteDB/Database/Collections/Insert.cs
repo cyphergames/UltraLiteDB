@@ -3,18 +3,25 @@ using System.Collections.Generic;
 
 namespace UltraLiteDB
 {
-    public partial class UltraLiteCollection
+    public partial class UltraLiteCollection<T>
     {
         /// <summary>
         /// Insert a new entity to this collection. Document Id must be a new value in collection - Returns document Id
         /// </summary>
-        public BsonValue Insert(BsonDocument document)
+        public BsonValue Insert(T document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
-            var removed = this.RemoveDocId(document);
+            var doc = _mapper.ToDocument(document);
+            var removed = this.RemoveDocId(doc);
 
-            var id = _engine.Value.Insert(_name, document, _autoId);
+            var id = _engine.Value.Insert(_name, doc, _autoId);
+
+            // checks if must update _id value in entity
+            if (removed && _id != null)
+            {
+                _id.Setter(document, id.RawValue);
+            }
 
             return id;
         }
@@ -22,20 +29,22 @@ namespace UltraLiteDB
         /// <summary>
         /// Insert a new document to this collection using passed id value.
         /// </summary>
-        public void Insert(BsonValue id, BsonDocument document)
+        public void Insert(BsonValue id, T document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             if (id == null || id.IsNull) throw new ArgumentNullException(nameof(id));
 
-            document["_id"] = id;
+            var doc = _mapper.ToDocument(document);
 
-            _engine.Value.Insert(_name, document);
+            doc["_id"] = id;
+
+            _engine.Value.Insert(_name, doc);
         }
 
         /// <summary>
         /// Insert an array of new documents to this collection. Document Id must be a new value in collection. Can be set buffer size to commit at each N documents
         /// </summary>
-        public int Insert(IEnumerable<BsonDocument> docs)
+        public int Insert(IEnumerable<T> docs)
         {
             if (docs == null) throw new ArgumentNullException(nameof(docs));
 
@@ -45,7 +54,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Implements bulk insert documents in a collection. Usefull when need lots of documents.
         /// </summary>
-        public int InsertBulk(IEnumerable<BsonDocument> docs, int batchSize = 5000)
+        public int InsertBulk(IEnumerable<T> docs, int batchSize = 5000)
         {
             if (docs == null) throw new ArgumentNullException(nameof(docs));
 
@@ -55,7 +64,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Implements bulk upsert of documents in a collection. Usefull when need lots of documents.
         /// </summary>
-        public int UpsertBulk(IEnumerable<BsonDocument> docs, int batchSize = 5000)
+        public int UpsertBulk(IEnumerable<T> docs, int batchSize = 5000)
         {
             if (docs == null) throw new ArgumentNullException(nameof(docs));
 
@@ -65,14 +74,19 @@ namespace UltraLiteDB
         /// <summary>
         /// Convert each T document in a BsonDocument, setting autoId for each one
         /// </summary>
-        private IEnumerable<BsonDocument> GetBsonDocs(IEnumerable<BsonDocument> documents)
+        private IEnumerable<BsonDocument> GetBsonDocs(IEnumerable<T> documents)
         {
             foreach (var document in documents)
             {
-                var removed = this.RemoveDocId(document);
+                var doc = _mapper.ToDocument(document);
+                var removed = this.RemoveDocId(doc);
 
-                yield return document;
+                yield return doc;
 
+                if (removed && _id != null)
+                {
+                    _id.Setter(document, doc["_id"].RawValue);
+                }
             }
         }
 
@@ -81,14 +95,13 @@ namespace UltraLiteDB
         /// </summary>
         private bool RemoveDocId(BsonDocument doc)
         {
-            if (doc.TryGetValue("_id", out var id)) 
+            if (_id != null && doc.TryGetValue("_id", out var id)) 
             {
                 // check if exists _autoId and current id is "empty"
-                if ((_autoId == BsonType.ObjectId && (id.IsNull || id.AsObjectId == ObjectId.Empty)) ||
-                    (_autoId == BsonType.Guid && id.AsGuid == Guid.Empty) ||
-                    (_autoId == BsonType.DateTime && id.AsDateTime == DateTime.MinValue) ||
-                    (_autoId == BsonType.Int32 && id.AsInt32 == 0) ||
-                    (_autoId == BsonType.Int64 && id.AsInt64 == 0))
+                if ((_autoId == BsonAutoId.Int32 && (id.IsInt32 && id.AsInt32 == 0)) ||
+                    (_autoId == BsonAutoId.ObjectId && (id.IsNull || (id.IsObjectId && id.AsObjectId == ObjectId.Empty))) ||
+                    (_autoId == BsonAutoId.Guid && id.IsGuid && id.AsGuid == Guid.Empty) ||
+                    (_autoId == BsonAutoId.Int64 && id.IsInt64 && id.AsInt64 == 0))
                 {
                     // in this cases, remove _id and set new value after
                     doc.Remove("_id");

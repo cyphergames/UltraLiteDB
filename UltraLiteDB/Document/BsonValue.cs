@@ -2,7 +2,8 @@
 using System;
 using System.Diagnostics;
 using System.Text;
-
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UltraLiteDB
 {
@@ -27,11 +28,6 @@ namespace UltraLiteDB
         /// Represent a MaxValue bson type
         /// </summary>
         public static BsonValue MaxValue = new BsonValue(BsonType.MaxValue, "+oo");
-
-        /// <summary>
-        /// Create a new document used in DbRef => { $id: id, $ref: collection }
-        /// </summary>
-        public static BsonDocument DbRef(BsonValue id, string collection) => new BsonDocument { ["$id"] = id, ["$ref"] = collection };
 
         /// <summary>
         /// Indicate BsonType of this BsonValue
@@ -116,6 +112,38 @@ namespace UltraLiteDB
             this.Type = BsonType.DateTime;
             this.RawValue = value.Truncate();
         }
+
+        public BsonValue(BsonValue value)
+        {
+            this.Type = value == null ? BsonType.Null : value.Type;
+            this.RawValue = value.RawValue;
+        }
+        
+        public static BsonValue FromObject(object value)
+        {
+            if (value == null) return new BsonValue(BsonType.Null, null);
+            else if (value is Int32) return new BsonValue((Int32)value);
+            else if (value is Int64) return new BsonValue((Int64)value);
+            else if (value is Single) return new BsonValue((Double)value);
+            else if (value is Double) return new BsonValue((Double)value);
+            else if (value is Decimal) return new BsonValue((Decimal)value);
+            else if (value is String) return new BsonValue((String)value);
+            else if (value is IDictionary<string, BsonValue>) return new BsonDocument((IDictionary<string, BsonValue>)value);
+            else if (value is IDictionary) return new BsonDocument((IDictionary)value);
+            else if (value is List<BsonValue>) return new BsonArray((List<BsonValue>)value);
+            else if (value is IEnumerable) return new BsonArray((IEnumerable)value);
+            else if (value is Byte[]) return new BsonValue((Byte[])value);
+            else if (value is ObjectId) return new BsonValue((ObjectId)value);
+            else if (value is Guid) return new BsonValue((Guid)value);
+            else if (value is Boolean) return new BsonValue((Boolean)value);
+            else if (value is DateTime) return new BsonValue((DateTime)value);
+            else if (value is BsonValue) return new BsonValue((BsonValue)value);
+            else
+            {
+                throw new InvalidCastException("Value is not a valid BSON data type - Use Mapper.ToDocument for more complex types converts");
+            }
+        }
+
 
         protected BsonValue(BsonType type, object rawValue)
         {
@@ -242,6 +270,34 @@ namespace UltraLiteDB
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool IsMaxValue => this.Type == BsonType.MaxValue;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public bool IsDefaultValue
+        {
+            get
+            {
+                switch (this.Type)
+                {
+                    case BsonType.Null: return true;
+                    case BsonType.MinValue:
+                    case BsonType.MaxValue:
+                        return false;
+                    case BsonType.Int32: return this.AsInt32 != 0;
+                    case BsonType.Int64: return this.AsInt64 != 0L;
+                    case BsonType.Double: return this.AsDouble != 0.0;
+                    case BsonType.Decimal: return this.AsDecimal != 0L;
+                    case BsonType.String: return this.AsString.IsNullOrEmpty();
+                    case BsonType.Document: return this.AsDocument.Count > 0;
+                    case BsonType.Array: return this.AsArray.Count > 0;
+                    case BsonType.Binary: return this.AsBinary.Length > 0;
+                    case BsonType.ObjectId: return this.AsObjectId == ObjectId.Empty;
+                    case BsonType.Guid: return this.AsGuid == Guid.Empty;
+                    case BsonType.Boolean: return this.AsBoolean == false;
+                    case BsonType.DateTime: return this.AsDateTime == DateTime.MinValue;
+                    default: throw new NotImplementedException();
+                }
+            }
+        }
 
         #endregion
 

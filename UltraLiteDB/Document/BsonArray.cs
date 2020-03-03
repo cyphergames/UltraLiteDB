@@ -36,6 +36,14 @@ namespace UltraLiteDB
             this.AddRange(items);
         }
 
+         public BsonArray(IEnumerable items)
+            : this()
+        {
+            if (items == null) throw new ArgumentNullException(nameof(items));
+
+            this.AddRange(items);
+        }
+
         internal new IList<BsonValue> RawValue => (List<BsonValue>)base.RawValue;
 
         public override BsonValue this[int index]
@@ -84,6 +92,16 @@ namespace UltraLiteDB
             foreach (var item in items)
             {
                 this.Add(item ?? BsonValue.Null);
+            }
+        }
+
+        public void AddRange(IEnumerable items)
+        {
+            if (items == null) throw new ArgumentNullException(nameof(items));
+
+            foreach (var item in items)
+            {
+                this.Add(BsonValue.FromObject(item));
             }
         }
 

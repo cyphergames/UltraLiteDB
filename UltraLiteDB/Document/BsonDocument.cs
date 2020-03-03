@@ -35,6 +35,17 @@ namespace UltraLiteDB
             }
         }
 
+        public BsonDocument(IDictionary dict)
+            : this()
+        {
+            if (dict == null) throw new ArgumentNullException(nameof(dict));
+
+            foreach (var key in dict.Keys)
+            {
+                this.Add(key.ToString(), BsonValue.FromObject(dict[key]));
+            }
+        }
+
         internal new Dictionary<string, BsonValue> RawValue => base.RawValue as Dictionary<string, BsonValue>;
 
         /// <summary>
@@ -245,6 +256,7 @@ namespace UltraLiteDB
         public bool TryGetValue(string key, out BsonValue value) => this.RawValue.TryGetValue(key, out value);
 
         public void Add(KeyValuePair<string, BsonValue> item) => this.Add(item.Key, item.Value);
+        public void Add(KeyValuePair<string, object> item) => this.Add(item.Key, BsonValue.FromObject(item.Value));
 
         public bool Contains(KeyValuePair<string, BsonValue> item) => this.RawValue.Contains(item);
 

@@ -69,7 +69,7 @@ namespace UltraLiteDB
                 case BsonType.Document:
                     writer.Write((byte)0x03);
                     this.WriteCString(writer, key);
-                    this.WriteDocument(writer, new BsonDocument((Dictionary<string, BsonValue>)value.RawValue));
+                    this.WriteDocument(writer, (BsonDocument)value);
                     break;
 
                 case BsonType.Array:

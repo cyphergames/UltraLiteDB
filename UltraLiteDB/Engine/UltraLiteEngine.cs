@@ -52,7 +52,7 @@ namespace UltraLiteDB
         public int CacheUsed { get { return _cache.CleanUsed; } }
 
         /// <summary>
-        /// Gets time waiting write lock operation before throw LiteException timeout
+        /// Gets time waiting write lock operation before throw UltraLiteException timeout
         /// </summary>
         public TimeSpan Timeout { get { return _timeout; } }
 
@@ -62,7 +62,7 @@ namespace UltraLiteDB
         #region Ctor
 
         /// <summary>
-        /// Initialize LiteEngine using default FileDiskService
+        /// Initialize UltraLiteEngine using default FileDiskService
         /// </summary>
         public UltraLiteEngine(string filename, bool journal = true)
             : this(new FileDiskService(filename, journal))
@@ -70,7 +70,7 @@ namespace UltraLiteDB
         }
 
         /// <summary>
-        /// Initialize LiteEngine with password encryption
+        /// Initialize UltraLiteEngine with password encryption
         /// </summary>
         public UltraLiteEngine(string filename, string password, bool journal = true)
             : this(new FileDiskService(filename, new FileOptions { Journal = journal }), password)
@@ -78,7 +78,7 @@ namespace UltraLiteDB
         }
 
         /// <summary>
-        /// Initialize LiteEngine using StreamDiskService
+        /// Initialize UltraLiteEngine using StreamDiskService
         /// </summary>
         public UltraLiteEngine(Stream stream, string password = null)
             : this(new StreamDiskService(stream), password)
@@ -86,7 +86,7 @@ namespace UltraLiteDB
         }
 
         /// <summary>
-        /// Initialize LiteEngine using custom disk service implementation and full engine options
+        /// Initialize UltraLiteEngine using custom disk service implementation and full engine options
         /// </summary>
         public UltraLiteEngine(IDiskService disk, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null, bool utcDate = false)
         {

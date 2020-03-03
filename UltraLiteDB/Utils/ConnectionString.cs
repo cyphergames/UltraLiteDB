@@ -45,7 +45,7 @@ namespace UltraLiteDB
         public long LimitSize { get; set; } = long.MaxValue;
 
         /// <summary>
-        /// "log": Debug messages from database - use `LiteDatabase.Log` (default: Logger.NONE)
+        /// "log": Debug messages from database - use `UltraLiteDatabase.Log` (default: Logger.NONE)
         /// </summary>
         public byte Log { get; set; } = Logger.NONE;
 
@@ -54,19 +54,15 @@ namespace UltraLiteDB
         /// </summary>
         public bool UtcDate { get; set; } = false;
 
-#if HAVE_SYNC_OVER_ASYNC
         /// <summary>
         /// "async": Use "sync over async" to UWP apps access any directory (default: false)
         /// </summary>
         public bool Async { get; set; } = false;
-#endif
 
-#if HAVE_FLUSH_DISK
         /// <summary>
         /// "flush": If true, apply flush direct to disk, ignoring OS cache [FileStream.Flush(true)]
         /// </summary>
         public bool Flush { get; set; } = false;
-#endif
 
         /// <summary>
         /// Initialize empty connection string
@@ -104,12 +100,8 @@ namespace UltraLiteDB
             this.LimitSize = values.GetFileSize(@"limit size", this.LimitSize);
             this.Log = values.GetValue("log", this.Log);
             this.UtcDate = values.GetValue("utc", this.UtcDate);
-#if HAVE_SYNC_OVER_ASYNC
             this.Async = values.GetValue("async", this.Async);
-#endif
-#if HAVE_FLUSH_DISK
             this.Flush = values.GetValue("flush", this.Flush);
-#endif
 
         }
     }

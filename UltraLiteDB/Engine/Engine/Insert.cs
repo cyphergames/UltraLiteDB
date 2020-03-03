@@ -8,7 +8,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Implements insert documents in a collection - returns _id value
         /// </summary>
-        public BsonValue Insert(string collection, BsonDocument doc, BsonType autoId = BsonType.ObjectId)
+        public BsonValue Insert(string collection, BsonDocument doc, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
             if (doc == null) throw new ArgumentNullException(nameof(doc));
 
@@ -20,7 +20,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Implements insert documents in a collection - use a buffer to commit transaction in each buffer count
         /// </summary>
-        public int Insert(string collection, IEnumerable<BsonDocument> docs, BsonType autoId = BsonType.ObjectId)
+        public int Insert(string collection, IEnumerable<BsonDocument> docs, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (docs == null) throw new ArgumentNullException(nameof(docs));
@@ -45,7 +45,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Bulk documents to a collection - use data chunks for most efficient insert
         /// </summary>
-        public int InsertBulk(string collection, IEnumerable<BsonDocument> docs, int batchSize = 5000, BsonType autoId = BsonType.ObjectId)
+        public int InsertBulk(string collection, IEnumerable<BsonDocument> docs, int batchSize = 5000, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (docs == null) throw new ArgumentNullException(nameof(docs));
@@ -64,7 +64,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Bulk upsert documents to a collection - use data chunks for most efficient insert
         /// </summary>
-        public int UpsertBulk(string collection, IEnumerable<BsonDocument> docs, int batchSize = 5000, BsonType autoId = BsonType.ObjectId)
+        public int UpsertBulk(string collection, IEnumerable<BsonDocument> docs, int batchSize = 5000, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
             if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (docs == null) throw new ArgumentNullException(nameof(docs));
@@ -83,7 +83,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Internal implementation of insert a document
         /// </summary>
-        private void InsertDocument(CollectionPage col, BsonDocument doc, BsonType autoId)
+        private void InsertDocument(CollectionPage col, BsonDocument doc, BsonAutoId autoId)
         {
             // collection Sequence was created after release current datafile version. 
             // In this case, Sequence will be 0 but already has documents. Let's fix this
@@ -108,14 +108,13 @@ namespace UltraLiteDB
             if (!doc.RawValue.TryGetValue("_id", out var id))
             {
                 doc["_id"] = id =
-                    autoId == BsonType.ObjectId ? new BsonValue(ObjectId.NewObjectId()) :
-                    autoId == BsonType.Guid ? new BsonValue(Guid.NewGuid()) :
-                    autoId == BsonType.DateTime ? new BsonValue(DateTime.Now) :
-                    autoId == BsonType.Int32 ? new BsonValue((Int32)col.Sequence) :
-                    autoId == BsonType.Int64 ? new BsonValue(col.Sequence) : BsonValue.Null;
+                    autoId == BsonAutoId.ObjectId ? new BsonValue(ObjectId.NewObjectId()) :
+                    autoId == BsonAutoId.Guid ? new BsonValue(Guid.NewGuid()) :
+                    autoId == BsonAutoId.Int32 ? new BsonValue((Int32)col.Sequence) :
+                    autoId == BsonAutoId.Int64 ? new BsonValue(col.Sequence) : BsonValue.Null;
             }
             // create bubble in sequence number if _id is bigger than current sequence
-            else if(autoId == BsonType.Int32 || autoId == BsonType.Int64)
+            else if(autoId == BsonAutoId.Int32 || autoId == BsonAutoId.Int64)
             {
                 var current = id.AsInt64;
 

@@ -13,6 +13,7 @@ namespace UltraLiteDB
         #region Properties
 
         private LazyLoad<UltraLiteEngine> _engine = null;
+        private BsonMapper _mapper = BsonMapper.Global;
         private Logger _log = null;
         private ConnectionString _connectionString = null;
 
@@ -20,6 +21,11 @@ namespace UltraLiteDB
         /// Get logger class instance
         /// </summary>
         public Logger Log { get { return _log; } }
+
+        /// <summary>
+        /// Get current instance of BsonMapper used in this database instance (can be BsonMapper.Global)
+        /// </summary>
+        public BsonMapper Mapper { get { return _mapper; } }
 
         /// <summary>
         /// Get current database engine instance. Engine is lower data layer that works with BsonDocuments only (no mapper, no LINQ)
@@ -33,15 +39,15 @@ namespace UltraLiteDB
         /// <summary>
         /// Starts LiteDB database using a connection string for file system database
         /// </summary>
-        public UltraLiteDatabase(string connectionString, Logger log = null)
-            : this(new ConnectionString(connectionString), log)
+        public UltraLiteDatabase(string connectionString, BsonMapper mapper = null, Logger log = null)
+            : this(new ConnectionString(connectionString), mapper, log)
         {
         }
 
         /// <summary>
         /// Starts LiteDB database using a connection string for file system database
         /// </summary>
-        public UltraLiteDatabase(ConnectionString connectionString, Logger log = null)
+        public UltraLiteDatabase(ConnectionString connectionString, BsonMapper mapper = null, Logger log = null)
         {
             if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
 
@@ -49,14 +55,12 @@ namespace UltraLiteDB
             _log = log ?? new Logger();
             _log.Level = log?.Level ?? _connectionString.Log;
 
+            _mapper = mapper ?? BsonMapper.Global;
+
             var options = new FileOptions
             {
-#if HAVE_SYNC_OVER_ASYNC
                 Async = _connectionString.Async,
-#endif
-#if HAVE_FLUSH_DISK
                 Flush = _connectionString.Flush,
-#endif
                 InitialSize = _connectionString.InitialSize,
                 LimitSize = _connectionString.LimitSize,
                 Journal = _connectionString.Journal,
@@ -68,10 +72,11 @@ namespace UltraLiteDB
         /// <summary>
         /// Starts LiteDB database using a Stream disk
         /// </summary>
-        public UltraLiteDatabase(Stream stream, string password = null, bool disposeStream = false)
+        public UltraLiteDatabase(Stream stream, BsonMapper mapper = null, string password = null, bool disposeStream = false)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
 
+            _mapper = mapper ?? BsonMapper.Global;
             _log = new Logger();
 
             _engine = new LazyLoad<UltraLiteEngine>(() => new UltraLiteEngine(new StreamDiskService(stream, disposeStream), password: password, log: _log));
@@ -81,14 +86,16 @@ namespace UltraLiteDB
         /// Starts LiteDB database using a custom IDiskService with all parameters available
         /// </summary>
         /// <param name="diskService">Custom implementation of persist data layer</param>
+        /// <param name="mapper">Instance of BsonMapper that map poco classes to document</param>
         /// <param name="password">Password to encrypt you datafile</param>
         /// <param name="timeout">Locker timeout for concurrent access</param>
         /// <param name="cacheSize">Max memory pages used before flush data in Journal file (when available)</param>
         /// <param name="log">Custom log implementation</param>
-        public UltraLiteDatabase(IDiskService diskService, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null)
+        public UltraLiteDatabase(IDiskService diskService, BsonMapper mapper = null, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null)
         {
             if (diskService == null) throw new ArgumentNullException(nameof(diskService));
 
+            _mapper = mapper ?? BsonMapper.Global;
             _log = log ?? new Logger();
 
             _engine = new LazyLoad<UltraLiteEngine>(() => new UltraLiteEngine(diskService, password: password, timeout: timeout, cacheSize: cacheSize, log: _log ));
@@ -98,16 +105,29 @@ namespace UltraLiteDB
 
         #region Collections
 
+        public UltraLiteCollection<T> GetCollection<T>(string name)
+        {
+            return new UltraLiteCollection<T>(name, BsonAutoId.ObjectId, _engine, _mapper, _log);
+        }
+
+        /// <summary>
+        /// Get a collection using a name based on typeof(T).Name (BsonMapper.ResolveCollectionName function)
+        /// </summary>
+        public UltraLiteCollection<T> GetCollection<T>()
+        {
+            return this.GetCollection<T>(null);
+        }
 
         /// <summary>
         /// Get a collection using a generic BsonDocument. If collection does not exits, create a new one.
         /// </summary>
         /// <param name="name">Collection name (case insensitive)</param>
-        public UltraLiteCollection GetCollection(string name)
+        /// <param name="autoId">Define autoId data type (when document contains no _id field)</param>
+        public UltraLiteCollection<BsonDocument> GetCollection(string name, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
             if (name.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(name));
 
-            return new UltraLiteCollection(name, _engine, _log);
+            return new UltraLiteCollection<BsonDocument>(name, autoId, _engine, _mapper, _log);
         }
 
         #endregion
