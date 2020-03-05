@@ -1,6 +1,6 @@
 # UltraLiteDB - A bare-bones C# .NET Key-value Store in a single database file, intended for use in Unity
 
-UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Anything that needs reflection, Linq, or dynamic code generation has been removed to make it work in Unity's IL2CPP AoT runtime environment. Some additional features have been removed to reduce code footprint. What's left is a very small, fast key-value store that lets you save and load BSON-encoded data in any Unity environment.
+UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Anything that needs Linq or dynamic code generation has been removed to make it work in Unity's IL2CPP AoT runtime environment. Some additional features have been removed to reduce code footprint. What's left is a very small, fast key-value store that lets you save and load BSON-encoded data in any Unity environment.
 
 ## Major features missing from LiteDB
 
@@ -17,7 +17,7 @@ UltraLiteDB is a trimmed down version of LiteDB 4.0 (http://www.litedb.org). Any
 - Basic queries on the primary key and user-created indexes (all, less than, greater than, between, in, etc)
 - Simple API similar to MongoDB
 - File format compatibility with LiteDB
-- 100% C# code for .NETStandard 2.0 Unity preset in a single DLL (~136kb)
+- 100% C# code for .NETStandard 2.0 Unity preset in a single DLL (~172 kb)
 - ACID in document/operation level
 - Data recovery after write failure (journal mode)
 - Datafile encryption using DES (AES) cryptography
@@ -42,7 +42,7 @@ It could also be useful for large amounts of read-only data as well, where you n
 
 For basic CRUD operations, the [LiteDB documentation](https://github.com/mbdavid/LiteDB/wiki) largely applies to UltraLiteDB.
 
-The biggest difference is that your collections are not generic types, they only store BsonDocument classes. Any query or index method using a linq method are also missing.
+The biggest difference is that any query or index method using a linq expression method are missing.
 
 ## Installing in a Unity project
 
