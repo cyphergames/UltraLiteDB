@@ -40,7 +40,7 @@ namespace UltraLiteDB
                 {
                     // read binary and deserialize document
                     var buffer = _data.Read(pkNode.DataBlock);
-                    var doc = _bsonReader.Deserialize(buffer).AsDocument;
+                    var doc = BsonReader.Deserialize(buffer).AsDocument;
                     var expr = new BsonFields(index.Field);
 
                     // get value from document

@@ -42,7 +42,7 @@ namespace UltraLiteDB
                     if (query.UseFilter)
                     {
                         var buffer = _data.Read(node.DataBlock);
-                        var doc = _bsonReader.Deserialize(buffer).AsDocument;
+                        var doc = BsonReader.Deserialize(buffer).AsDocument;
 
                         if (query.FilterDocument(doc) == false) continue;
                     }

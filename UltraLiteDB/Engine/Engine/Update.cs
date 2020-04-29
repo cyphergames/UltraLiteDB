@@ -68,7 +68,7 @@ namespace UltraLiteDB
             if (pkNode == null) return false;
 
             // serialize document in bytes
-            var bytes = _bsonWriter.Serialize(doc);
+            var bytes = BsonWriter.Serialize(doc);
 
             // update data storage
             var dataBlock = _data.Update(col, pkNode.DataBlock, bytes);

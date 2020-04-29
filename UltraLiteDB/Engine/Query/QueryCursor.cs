@@ -49,7 +49,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Fetch documents from enumerator and add to buffer. If cache recycle, stop read to execute in another read
         /// </summary>
-        public void Fetch(TransactionService trans, DataService data, BsonReader bsonReader)
+        public void Fetch(TransactionService trans, DataService data)
         {
             // empty document buffer
             this.Documents.Clear();
@@ -80,7 +80,7 @@ namespace UltraLiteDB
 
                 // read document from data block
                 var buffer = data.Read(node.DataBlock);
-                var doc = bsonReader.Deserialize(buffer).AsDocument;
+                var doc = BsonReader.Deserialize(buffer).AsDocument;
 
                 // if need run in full scan, execute full scan and test return
                 if (_query.UseFilter)

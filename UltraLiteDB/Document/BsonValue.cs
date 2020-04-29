@@ -584,8 +584,8 @@ namespace UltraLiteDB
 
         public static bool operator ==(BsonValue lhs, BsonValue rhs)
         {
-            if (object.ReferenceEquals(lhs, null)) return object.ReferenceEquals(rhs, null);
-            if (object.ReferenceEquals(rhs, null)) return false; // don't check type because sometimes different types can be ==
+            if (object.ReferenceEquals(lhs, null)) return object.ReferenceEquals(rhs, null) || rhs.IsNull;
+            if (object.ReferenceEquals(rhs, null)) return object.ReferenceEquals(lhs, null) || lhs.IsNull;
 
             return lhs.Equals(rhs);
         }

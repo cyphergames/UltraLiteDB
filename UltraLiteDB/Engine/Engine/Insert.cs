@@ -131,7 +131,7 @@ namespace UltraLiteDB
             _log.Write(Logger.COMMAND, "insert document on '{0}' :: _id = {1}", col.CollectionName, id.RawValue);
 
             // serialize object
-            var bytes = _bsonWriter.Serialize(doc);
+            var bytes = BsonWriter.Serialize(doc);
 
             // storage in data pages - returns dataBlock address
             var dataBlock = _data.Insert(col, bytes);

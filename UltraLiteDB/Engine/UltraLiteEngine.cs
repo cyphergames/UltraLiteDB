@@ -33,9 +33,6 @@ namespace UltraLiteDB
 
         private TimeSpan _timeout;
 
-        private BsonReader _bsonReader;
-        private BsonWriter _bsonWriter = new BsonWriter();
-
         /// <summary>
         /// Get log instance for debug operations
         /// </summary>
@@ -96,7 +93,6 @@ namespace UltraLiteDB
             _cacheSize = cacheSize;
             _disk = disk;
             _log = log ?? new Logger();
-            _bsonReader = new BsonReader(utcDate);
 
             try
             {

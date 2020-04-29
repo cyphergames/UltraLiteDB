@@ -3,7 +3,7 @@ using System.Text;
 
 namespace UltraLiteDB
 {
-    internal class ByteReader
+    public class ByteReader
     {
         private byte[] _buffer;
         private int _length;
@@ -17,6 +17,35 @@ namespace UltraLiteDB
             _length = buffer.Length;
             _pos = 0;
         }
+
+        public ByteReader(ArraySegment<byte> buffer)
+        {
+            _buffer = buffer.Array;
+            _length = buffer.Offset+buffer.Count;
+            _pos = buffer.Offset;
+        }
+
+        public void Clear()
+        {
+            _buffer = null;
+            _length = 0;
+            _pos = 0;
+        }
+
+        public void Reset(byte[] buffer)
+        {
+            _buffer = buffer;
+            _length = buffer.Length;
+            _pos = 0;
+        }
+
+        public void Reset(ArraySegment<byte> buffer)
+        {
+            _buffer = buffer.Array;
+            _length = buffer.Offset+buffer.Count;
+            _pos = buffer.Offset;
+        }
+
 
         public void Skip(int length)
         {
@@ -188,7 +217,7 @@ namespace UltraLiteDB
             return new ObjectId(this.ReadBytes(12));
         }
 
-        public PageAddress ReadPageAddress()
+        internal PageAddress ReadPageAddress()
         {
             return new PageAddress(this.ReadUInt32(), this.ReadUInt16());
         }
@@ -208,8 +237,8 @@ namespace UltraLiteDB
 
                 case BsonType.String: return this.ReadString(length);
 
-                case BsonType.Document: return new BsonReader(false).ReadDocument(this);
-                case BsonType.Array: return new BsonReader(false).ReadArray(this);
+                case BsonType.Document: return BsonReader.ReadDocument(this);
+                case BsonType.Array: return BsonReader.ReadArray(this);
 
                 case BsonType.Binary: return this.ReadBytes(length);
                 case BsonType.ObjectId: return this.ReadObjectId();

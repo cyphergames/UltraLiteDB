@@ -3,7 +3,7 @@ using System.Text;
 
 namespace UltraLiteDB
 {
-    internal class ByteWriter
+    public class ByteWriter
     {
         private byte[] _buffer;
         private int _pos;
@@ -22,6 +22,30 @@ namespace UltraLiteDB
         {
             _buffer = buffer;
             _pos = 0;
+        }
+
+        public ByteWriter(ArraySegment<byte> buffer)
+        {
+            _buffer = buffer.Array;
+            _pos = buffer.Offset;
+        }
+
+        public void Clear()
+        {
+            _buffer = null;
+            _pos = 0;
+        }
+
+        public void Reset(byte[] buffer)
+        {
+            _buffer = buffer;
+            _pos = 0;
+        }
+
+        public void Reset(ArraySegment<byte> buffer)
+        {
+            _buffer = buffer.Array;
+            _pos = buffer.Offset;
         }
 
         public void Skip(int length)
@@ -199,7 +223,7 @@ namespace UltraLiteDB
             this.Write(value.ToByteArray());
         }
 
-        public void Write(PageAddress value)
+        internal void Write(PageAddress value)
         {
             this.Write(value.PageID);
             this.Write(value.Index);
@@ -223,8 +247,8 @@ namespace UltraLiteDB
 
                 case BsonType.String: this.Write((String)value.RawValue, length); break;
 
-                case BsonType.Document: new BsonWriter().WriteDocument(this, value.AsDocument); break;
-                case BsonType.Array: new BsonWriter().WriteArray(this, value.AsArray); break;
+                case BsonType.Document: BsonWriter.WriteDocument(this, value.AsDocument); break;
+                case BsonType.Array: BsonWriter.WriteArray(this, value.AsArray); break;
 
                 case BsonType.Binary: this.Write((Byte[])value.RawValue); break;
                 case BsonType.ObjectId: this.Write((ObjectId)value.RawValue); break;

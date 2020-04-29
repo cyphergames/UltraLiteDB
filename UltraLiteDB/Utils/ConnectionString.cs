@@ -50,9 +50,9 @@ namespace UltraLiteDB
         public byte Log { get; set; } = Logger.NONE;
 
         /// <summary>
-        /// "utc": Returns date in UTC timezone from BSON deserialization (default: false - LocalTime)
+        /// "utc": Returns date in UTC timezone from BSON deserialization (default: true - UTC)
         /// </summary>
-        public bool UtcDate { get; set; } = false;
+        public bool UtcDate { get; set; } = true;
 
         /// <summary>
         /// "async": Use "sync over async" to UWP apps access any directory (default: false)

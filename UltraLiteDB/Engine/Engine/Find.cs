@@ -31,7 +31,7 @@ namespace UltraLiteDB
                 _log.Write(Logger.QUERY, "{0} :: {1}", collection, query);
 
                 // fill buffer with documents 
-                cursor.Fetch(_trans, _data, _bsonReader);
+                cursor.Fetch(_trans, _data);
             
 
                 // returing first documents in buffer
@@ -41,7 +41,7 @@ namespace UltraLiteDB
                 while (cursor.HasMore)
                 {
   
-                    cursor.Fetch(_trans, _data, _bsonReader);
+                    cursor.Fetch(_trans, _data);
                     
 
                     // return documents from buffer
