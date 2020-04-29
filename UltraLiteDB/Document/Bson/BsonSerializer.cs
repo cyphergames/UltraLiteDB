@@ -11,7 +11,6 @@ namespace UltraLiteDB
         {
             if (doc == null) throw new ArgumentNullException(nameof(doc));
 
-
             return BsonWriter.Serialize(doc);
         }
 

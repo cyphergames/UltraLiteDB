@@ -12,6 +12,12 @@ namespace UltraLiteDB
 
         public int Position { get { return _pos; } set { _pos = value; } }
 
+        public ByteWriter()
+        {
+            _buffer = null;
+            _pos = 0;
+        }
+
         public ByteWriter(int length)
         {
             _buffer = new byte[length];

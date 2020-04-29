@@ -24,15 +24,11 @@ namespace UltraLiteDB
 
         public static int SerializeTo(BsonDocument doc, byte[] array)
         {
-            var count = doc.GetBytesCount(true);
-            if(count > array.Length)
-                throw new ArgumentException("Array not large enough to hold encoded BsonDocument");
-
             var writer = new ByteWriter(array);
 
             WriteDocument(writer, doc);
 
-            return count;
+            return writer.Position;
         }
 
         /// <summary>

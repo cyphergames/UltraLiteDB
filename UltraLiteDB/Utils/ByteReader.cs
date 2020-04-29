@@ -11,6 +11,13 @@ namespace UltraLiteDB
 
         public int Position { get { return _pos; } set { _pos = value; } }
 
+         public ByteReader()
+        {
+            _buffer = null;
+            _length = 0;
+            _pos = 0;
+        }
+
         public ByteReader(byte[] buffer)
         {
             _buffer = buffer;
