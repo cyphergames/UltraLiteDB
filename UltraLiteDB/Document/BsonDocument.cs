@@ -283,7 +283,7 @@ namespace UltraLiteDB
 
         private int _length = 0;
 
-        internal override int GetBytesCount(bool recalc)
+        public override int GetBytesCount(bool recalc)
         {
             if (recalc == false && _length > 0) return _length;
 

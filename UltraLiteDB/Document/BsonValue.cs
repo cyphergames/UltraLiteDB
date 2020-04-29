@@ -641,7 +641,7 @@ namespace UltraLiteDB
         /// Returns how many bytes this BsonValue will consume when converted into binary BSON
         /// If recalc = false, use cached length value (from Array/Document only)
         /// </summary>
-        internal virtual int GetBytesCount(bool recalc)
+        public virtual int GetBytesCount(bool recalc)
         {
             switch (this.Type)
             {
