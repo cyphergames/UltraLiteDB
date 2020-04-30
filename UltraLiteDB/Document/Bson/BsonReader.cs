@@ -16,6 +16,11 @@ namespace UltraLiteDB
             return ReadDocument(new ByteReader(bson), utcDate);
         }
 
+        public static BsonDocument Deserialize(ArraySegment<byte> bson, bool utcDate = true)
+        {
+            return ReadDocument(new ByteReader(bson), utcDate);
+        }
+
         /// <summary>
         /// Read a BsonDocument from reader
         /// </summary>
