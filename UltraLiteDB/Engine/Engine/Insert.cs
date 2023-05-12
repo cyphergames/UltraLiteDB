@@ -10,9 +10,19 @@ namespace UltraLiteDB
         /// </summary>
         public BsonValue Insert(string collection, BsonDocument doc, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
+            if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (doc == null) throw new ArgumentNullException(nameof(doc));
 
             this.Insert(collection, new BsonDocument[] { doc }, autoId);
+
+            Transaction<int>(collection, true, (col) =>
+            {
+
+                this.InsertDocument(col, doc, autoId);
+                _trans.CheckPoint();
+
+                return 1;
+            });
 
             return doc["_id"];
         }

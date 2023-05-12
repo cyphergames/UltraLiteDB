@@ -144,7 +144,7 @@ namespace UltraLiteDB
             return o;
         }
 
-        private BsonDocument SerializeObject(Type type, object obj, int depth)
+        public BsonDocument SerializeObject(Type type, object obj, int depth)
         {
             var o = new BsonDocument();
             var t = obj.GetType();

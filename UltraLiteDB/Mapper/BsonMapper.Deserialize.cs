@@ -238,7 +238,7 @@ namespace UltraLiteDB
             }
         }
 
-        private void DeserializeObject(Type type, object obj, BsonDocument value)
+        public void DeserializeObject(Type type, object obj, BsonDocument value)
         {
             var entity = this.GetEntityMapper(type);
 
