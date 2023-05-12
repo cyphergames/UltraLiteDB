@@ -11,9 +11,11 @@ namespace UltraLiteDB
         /// <summary>
         /// Main method - deserialize using ByteReader helper
         /// </summary>
-        public static BsonDocument Deserialize(byte[] bson, bool utcDate = true)
+        public static BsonDocument Deserialize(byte[] bson, bool utcDate = true, int offset = 0)
         {
-            return ReadDocument(new ByteReader(bson), utcDate);
+            ByteReader reader = new ByteReader(bson);
+            reader.Skip(offset);
+            return ReadDocument(reader, utcDate);
         }
 
         public static BsonDocument Deserialize(ArraySegment<byte> bson, bool utcDate = true)

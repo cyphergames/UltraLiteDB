@@ -14,18 +14,18 @@ namespace UltraLiteDB
             return BsonWriter.Serialize(doc);
         }
 
-        public static int SerializeTo(BsonDocument doc, byte[] array)
+        public static int SerializeTo(BsonDocument doc, byte[] array, int offset = 0)
         {
             if (doc == null) throw new ArgumentNullException(nameof(doc));
 
-            return BsonWriter.SerializeTo(doc, array);
+            return BsonWriter.SerializeTo(doc, array, offset);
         }
 
-        public static BsonDocument Deserialize(byte[] buffer, bool utcDate = true)
+        public static BsonDocument Deserialize(byte[] buffer, bool utcDate = true, int offset = 0)
         {
             if (buffer == null || buffer.Length == 0) throw new ArgumentNullException(nameof(buffer));
 
-            return BsonReader.Deserialize(buffer, utcDate);
+            return BsonReader.Deserialize(buffer, utcDate, offset);
         }
 
         public static BsonDocument Deserialize(ArraySegment<byte> buffer, bool utcDate = true)

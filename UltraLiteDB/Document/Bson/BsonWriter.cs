@@ -22,10 +22,11 @@ namespace UltraLiteDB
             return writer.Buffer;
         }
 
-        public static int SerializeTo(BsonDocument doc, byte[] array)
+        public static int SerializeTo(BsonDocument doc, byte[] array, int offset = 0)
         {
             var writer = new ByteWriter(array);
-
+            writer.Skip(offset);
+            
             WriteDocument(writer, doc);
 
             return writer.Position;
