@@ -11,9 +11,23 @@ namespace UltraLiteDB
         /// </summary>
         public bool Update(string collection, BsonDocument doc)
         {
+            if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (doc == null) throw new ArgumentNullException(nameof(doc));
 
-            return this.Update(collection, new BsonDocument[] { doc }) == 1;
+            return this.Transaction<bool>(collection, false, (col) =>
+            {
+                // no collection, no updates
+                if (col == null) return false;
+
+                var updated = false;
+
+                if (this.UpdateDocument(col, doc))
+                {
+                    updated = true;
+                }
+
+                return updated;
+            });
         }
 
         /// <summary>
@@ -36,7 +50,6 @@ namespace UltraLiteDB
                     if (this.UpdateDocument(col, doc))
                     {
                         _trans.CheckPoint();
-
                         count++;
                     }
                 }

@@ -12,9 +12,24 @@ namespace UltraLiteDB
         /// </summary>
         public bool Upsert(string collection, BsonDocument doc, BsonAutoId autoId = BsonAutoId.ObjectId)
         {
+            if (collection.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(collection));
             if (doc == null) throw new ArgumentNullException(nameof(doc));
 
-            return this.Upsert(collection, new BsonDocument[] { doc }, autoId) == 1;
+            return this.Transaction<bool>(collection, true, (col) =>
+            {
+                var inserted = false;
+
+                // first try update document (if exists _id)
+                // if not found, insert
+                if (doc["_id"] == BsonValue.Null || this.UpdateDocument(col, doc) == false)
+                {
+                    this.InsertDocument(col, doc, autoId);
+                    inserted = true;
+                }
+
+                // returns if document was inserted
+                return inserted;
+            });
         }
 
         /// <summary>
