@@ -47,7 +47,6 @@ namespace UltraLiteDB.Tests.Database
                   mode =  excluSIVE ;
                   limit SIZE = 20mb;
                   log = 255 ;
-                  utc=true ;
                   upgrade=true;
                   async=true";
             var full = new ConnectionString(fullConnectionString);
@@ -60,7 +59,6 @@ namespace UltraLiteDB.Tests.Database
             Assert.AreEqual(10 * 1024 * 1024, full.InitialSize);
             Assert.AreEqual(20 * 1024 * 1024, full.LimitSize);
             Assert.AreEqual(255, full.Log);
-            Assert.AreEqual(true, full.UtcDate);
             Assert.AreEqual(true, full.Async);
         }
 
@@ -117,7 +115,6 @@ namespace UltraLiteDB.Tests.Database
             Assert.AreEqual(0, connectionString.InitialSize);
             Assert.AreEqual(long.MaxValue, connectionString.LimitSize);
             Assert.AreEqual(Logger.NONE, connectionString.Log);
-            Assert.AreEqual(false, connectionString.UtcDate);
             Assert.AreEqual(false, connectionString.Async);
         }
     }

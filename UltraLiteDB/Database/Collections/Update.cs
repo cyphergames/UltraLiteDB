@@ -15,8 +15,8 @@ namespace UltraLiteDB
 
             // get BsonDocument from object
             var doc = _mapper.ToDocument(document);
-
-            return _engine.Value.Update(_name, new BsonDocument[] { doc }) > 0;
+            
+            return _engine.Value.Update(_name, doc);
         }
 
         /// <summary>

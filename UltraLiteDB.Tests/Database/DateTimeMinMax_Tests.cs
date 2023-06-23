@@ -61,8 +61,8 @@ namespace UltraLiteDB.Tests.Database
         {
             var searchdatetime = new DateTime(2018, 02, 22, 0, 0, 10);
 
-            var min = coll.Min("Date").AsDateTime;
-            var max = coll.Max("Date").AsDateTime;
+            var min = coll.Min("Date").AsDateTime.ToUniversalTime();
+            var max = coll.Max("Date").AsDateTime.ToUniversalTime();
 
             var smaller = coll.FindOne(Query.LT("Date", searchdatetime));
             var greater = coll.FindOne(Query.GT("Date", searchdatetime));

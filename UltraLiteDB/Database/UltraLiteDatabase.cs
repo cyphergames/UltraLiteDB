@@ -66,7 +66,7 @@ namespace UltraLiteDB
                 Journal = _connectionString.Journal,
             };
 
-            _engine = new LazyLoad<UltraLiteEngine>(() => new UltraLiteEngine(new FileDiskService(_connectionString.Filename, options), _connectionString.Password, _connectionString.Timeout, _connectionString.CacheSize, _log, _connectionString.UtcDate));
+            _engine = new LazyLoad<UltraLiteEngine>(() => new UltraLiteEngine(new FileDiskService(_connectionString.Filename, options), _connectionString.Password, _connectionString.Timeout, _connectionString.CacheSize, _log));
         }
 
         /// <summary>

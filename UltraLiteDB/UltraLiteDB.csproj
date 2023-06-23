@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
@@ -6,10 +6,10 @@
 
   <PropertyGroup>
     <PackageId>UltraLiteDB</PackageId>
-    <Version>1.4.5</Version>
-    <AssemblyVersion>1.4.5.0</AssemblyVersion>
-    <FileVersion>1.4.5</FileVersion>
-    <VersionPrefix>1.4.5</VersionPrefix>
+    <Version>1.4.6</Version>
+    <AssemblyVersion>1.4.6.0</AssemblyVersion>
+    <FileVersion>1.4.6</FileVersion>
+    <VersionPrefix>1.4.6</VersionPrefix>
     <Authors>Maurício David, Jeremy Friesen</Authors>
     <Product>UltraLiteDB</Product>
     <Description>UltraLiteDB - An ultra-lightweight embedded .NET NoSQL document store in a single datafile</Description>

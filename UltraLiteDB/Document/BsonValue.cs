@@ -563,10 +563,8 @@ namespace UltraLiteDB
 
                 case BsonType.Boolean: return this.AsBoolean.CompareTo(other.AsBoolean);
                 case BsonType.DateTime:
-                    var d0 = this.AsDateTime;
-                    var d1 = other.AsDateTime;
-                    if (d0.Kind != DateTimeKind.Utc) d0 = d0.ToUniversalTime();
-                    if (d1.Kind != DateTimeKind.Utc) d1 = d1.ToUniversalTime();
+                    var d0 = this.AsDateTime.ToUniversalTime();
+                    var d1 = other.AsDateTime.ToUniversalTime();
                     return d0.CompareTo(d1);
 
                 default: throw new NotImplementedException();

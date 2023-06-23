@@ -159,7 +159,7 @@ namespace UltraLiteDB
         public static bool IsList(Type type)
         {
             if (type.IsArray) return true;
-            if (type == typeof(string)) return false; // do not define "String" as IEnumerable<char>
+            if (type == typeof(string) || type == typeof(BsonDocument)) return false; // do not define "String" as IEnumerable<char>
 
             foreach (var @interface in type.GetInterfaces())
             {

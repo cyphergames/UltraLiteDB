@@ -137,6 +137,14 @@ namespace UltraLiteDB.Tests.Mapper
         public DateTime MyDateIndexed { get; set; }
     }
 
+    public class BsonContainer
+    {
+        [BsonField("nbd")]
+        public BsonDocument NestedDoc { get; set; }
+        [BsonField("nbv")]
+        public BsonValue NestedDocAsValue { get; set; }
+    }
+
     #endregion
 
     [TestClass]
@@ -259,6 +267,30 @@ namespace UltraLiteDB.Tests.Mapper
             Assert.AreEqual(obj.MyObjectList[0], obj.MyObjectList[0]);
             Assert.AreEqual(obj.MyObjectList[1], obj.MyObjectList[1]);
             Assert.AreEqual(obj.MyObjectList[3], obj.MyObjectList[3]);
+        }
+
+        [TestMethod]
+        public void Nested_Bson_Mapper()
+        {
+            BsonContainer container = new BsonContainer();
+            container.NestedDoc = new BsonDocument();
+            container.NestedDoc["prop1"] = 1;
+            container.NestedDoc["prop2"] = "stuff";
+            container.NestedDocAsValue = container.NestedDoc;
+
+            var mapper = CreateMapper();
+            BsonDocument doc = mapper.ToDocument(container);
+
+            byte[] serialized = BsonWriter.Serialize(doc);
+            BsonDocument deserializedDoc = BsonReader.Deserialize(serialized);
+
+            BsonValue nested = deserializedDoc["nbd"];
+            BsonValue nestedAsValue = deserializedDoc["nbv"];
+
+            BsonDocument nestedDoc = (BsonDocument)nested;
+            BsonDocument nestedDocAsValue = (BsonDocument)nestedAsValue;
+
+            Assert.AreEqual(nestedDoc["prop2"], nestedDocAsValue["prop2"]);
         }
     }
 }

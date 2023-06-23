@@ -90,6 +90,22 @@ namespace UltraLiteDB
             }
         }
 
+         /// <summary>
+        /// Convert each T document in a BsonDocument, setting autoId for each one
+        /// </summary>
+        private IEnumerable<BsonDocument> GetBsonDoc(T document)
+        {
+            var doc = _mapper.ToDocument(document);
+            var removed = this.RemoveDocId(doc);
+
+            yield return doc;
+
+            if (removed && _id != null)
+            {
+                _id.Setter(document, doc["_id"].RawValue);
+            }
+        }
+
         /// <summary>
         /// Remove document _id if contains a "empty" value (checks for autoId bson type)
         /// </summary>

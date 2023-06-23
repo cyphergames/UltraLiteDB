@@ -85,7 +85,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Initialize UltraLiteEngine using custom disk service implementation and full engine options
         /// </summary>
-        public UltraLiteEngine(IDiskService disk, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null, bool utcDate = false)
+        public UltraLiteEngine(IDiskService disk, string password = null, TimeSpan? timeout = null, int cacheSize = 5000, Logger log = null)
         {
             if (disk == null) throw new ArgumentNullException(nameof(disk));
 

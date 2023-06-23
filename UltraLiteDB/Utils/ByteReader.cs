@@ -211,7 +211,7 @@ namespace UltraLiteDB
             // this will be review in v5
             var date = new DateTime(this.ReadInt64(), DateTimeKind.Utc);
 
-            return date.ToLocalTime();
+            return date;
         }
 
         public Guid ReadGuid()

@@ -12,10 +12,7 @@ namespace UltraLiteDB
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
 
-            // get BsonDocument from object
-            var doc = _mapper.ToDocument(document);
-
-            return _engine.Value.Upsert(_name, doc);
+            return _engine.Value.Upsert(_name, this.GetBsonDoc(document), _autoId) == 1;
         }
 
         /// <summary>

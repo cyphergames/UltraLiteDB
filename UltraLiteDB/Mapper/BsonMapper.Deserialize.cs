@@ -88,7 +88,7 @@ namespace UltraLiteDB
             // check if your type is already a BsonValue/BsonDocument/BsonArray
             if (type == typeof(BsonValue))
             {
-                return new BsonValue(value);
+                return value;
             }
             else if (type == typeof(BsonDocument))
             {

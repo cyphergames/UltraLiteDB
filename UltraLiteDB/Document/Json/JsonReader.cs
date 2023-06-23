@@ -167,7 +167,7 @@ namespace UltraLiteDB
                 case "$binary": val = new BsonValue(Convert.FromBase64String(value)); break;
                 case "$oid": val = new BsonValue(new ObjectId(value)); break;
                 case "$guid": val = new BsonValue(new Guid(value)); break;
-                case "$date": val = new BsonValue(DateTime.Parse(value).ToLocalTime()); break;
+                case "$date": val = new BsonValue(DateTime.Parse(value).ToUniversalTime()); break;
                 case "$numberLong": val = new BsonValue(Convert.ToInt64(value, _numberFormat)); break;
                 case "$numberDecimal": val = new BsonValue(Convert.ToDecimal(value, _numberFormat)); break;
                 case "$minValue": val = BsonValue.MinValue; break;

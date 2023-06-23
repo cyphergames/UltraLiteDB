@@ -50,11 +50,6 @@ namespace UltraLiteDB
         public byte Log { get; set; } = Logger.NONE;
 
         /// <summary>
-        /// "utc": Returns date in UTC timezone from BSON deserialization (default: true - UTC)
-        /// </summary>
-        public bool UtcDate { get; set; } = true;
-
-        /// <summary>
         /// "async": Use "sync over async" to UWP apps access any directory (default: false)
         /// </summary>
         public bool Async { get; set; } = false;
@@ -99,7 +94,6 @@ namespace UltraLiteDB
             this.InitialSize = values.GetFileSize(@"initial size", this.InitialSize);
             this.LimitSize = values.GetFileSize(@"limit size", this.LimitSize);
             this.Log = values.GetValue("log", this.Log);
-            this.UtcDate = values.GetValue("utc", this.UtcDate);
             this.Async = values.GetValue("async", this.Async);
             this.Flush = values.GetValue("flush", this.Flush);
 

@@ -11,22 +11,22 @@ namespace UltraLiteDB
         /// <summary>
         /// Main method - deserialize using ByteReader helper
         /// </summary>
-        public static BsonDocument Deserialize(byte[] bson, bool utcDate = true, int offset = 0)
+        public static BsonDocument Deserialize(byte[] bson, int offset = 0)
         {
             ByteReader reader = new ByteReader(bson);
             reader.Skip(offset);
-            return ReadDocument(reader, utcDate);
+            return ReadDocument(reader);
         }
 
-        public static BsonDocument Deserialize(ArraySegment<byte> bson, bool utcDate = true)
+        public static BsonDocument Deserialize(ArraySegment<byte> bson)
         {
-            return ReadDocument(new ByteReader(bson), utcDate);
+            return ReadDocument(new ByteReader(bson));
         }
 
         /// <summary>
         /// Read a BsonDocument from reader
         /// </summary>
-        public static BsonDocument ReadDocument(ByteReader reader, bool utcDate = true)
+        public static BsonDocument ReadDocument(ByteReader reader)
         {
             var length = reader.ReadInt32();
             var end = reader.Position + length - 5;
@@ -34,7 +34,7 @@ namespace UltraLiteDB
 
             while (reader.Position < end)
             {
-                var value = ReadElement(reader, out string name, utcDate);
+                var value = ReadElement(reader, out string name);
                 obj.RawValue[name] = value;
             }
 
@@ -46,7 +46,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Read an BsonArray from reader
         /// </summary>
-        public static BsonArray ReadArray(ByteReader reader, bool utcDate = true)
+        public static BsonArray ReadArray(ByteReader reader)
         {
             var length = reader.ReadInt32();
             var end = reader.Position + length - 5;
@@ -54,7 +54,7 @@ namespace UltraLiteDB
 
             while (reader.Position < end)
             {
-                var value = ReadElement(reader, out string name, utcDate);
+                var value = ReadElement(reader, out string name);
                 arr.Add(value);
             }
 
@@ -66,7 +66,7 @@ namespace UltraLiteDB
         /// <summary>
         /// Reads an element (key-value) from an reader
         /// </summary>
-        private static BsonValue ReadElement(ByteReader reader, out string name, bool utcDate)
+        private static BsonValue ReadElement(ByteReader reader, out string name)
         {
             var type = reader.ReadByte();
             name = reader.ReadCString();
@@ -81,11 +81,11 @@ namespace UltraLiteDB
             }
             else if (type == 0x03) // Document
             {
-                return ReadDocument(reader, utcDate);
+                return ReadDocument(reader);
             }
             else if (type == 0x04) // Array
             {
-                return ReadArray(reader, utcDate);
+                return ReadArray(reader);
             }
             else if (type == 0x05) // Binary
             {
@@ -117,7 +117,7 @@ namespace UltraLiteDB
 
                 var date = BsonValue.UnixEpoch.AddMilliseconds(ts);
 
-                return utcDate ? date : date.ToLocalTime();
+                return date;
             }
             else if (type == 0x0A) // Null
             {

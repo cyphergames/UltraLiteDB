@@ -38,6 +38,7 @@ namespace UltraLiteDB
             Func<object, BsonValue> custom;
 
             // if is already a bson value
+            if (obj is BsonDocument) return (BsonDocument)obj;
             if (obj is BsonValue) return new BsonValue((BsonValue)obj);
 
             // test string - mapper has some special options
@@ -142,6 +143,11 @@ namespace UltraLiteDB
             }
 
             return o;
+        }
+
+        public BsonDocument SerializeObject(object obj)
+        {
+            return SerializeObject(obj.GetType(), obj, 0);
         }
 
         public BsonDocument SerializeObject(Type type, object obj, int depth)

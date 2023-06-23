@@ -15,7 +15,7 @@ namespace UltraLiteDB.Tests.Document
             doc["_id"] = 123;
             doc["FirstString"] = "BEGIN this string \" has \" \t and this \f \n\r END";
             doc["CustomerId"] = Guid.NewGuid();
-            doc["Date"] = DateTime.Now;
+            doc["Date"] = DateTime.UtcNow;
             doc["MyNull"] = null;
             doc["EmptyObj"] = new BsonDocument();
             doc["EmptyString"] = "";
@@ -33,7 +33,7 @@ namespace UltraLiteDB.Tests.Document
             doc["Items"].AsArray.Add("string-one");
             doc["Items"].AsArray.Add(null);
             doc["Items"].AsArray.Add(true);
-            doc["Items"].AsArray.Add(DateTime.Now);
+            doc["Items"].AsArray.Add(DateTime.UtcNow);
 
             return doc;
         }
@@ -71,13 +71,7 @@ namespace UltraLiteDB.Tests.Document
             var doc = new BsonDocument { ["now"] = DateTime.Now, ["min"] = DateTime.MinValue, ["max"] = DateTime.MaxValue };
             var bytes = BsonSerializer.Serialize(doc);
 
-            var local = BsonSerializer.Deserialize(bytes, false);
-            var utc = BsonSerializer.Deserialize(bytes, true);
-
-            // local test
-            Assert.AreEqual(DateTime.MinValue, local["min"].AsDateTime);
-            Assert.AreEqual(DateTime.MaxValue, local["max"].AsDateTime);
-            Assert.AreEqual(DateTimeKind.Local, local["now"].AsDateTime.Kind);
+            var utc = BsonSerializer.Deserialize(bytes);
 
             // utc test
             Assert.AreEqual(DateTime.MinValue, utc["min"].AsDateTime);

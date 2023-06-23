@@ -14,7 +14,7 @@ namespace UltraLiteDB.Tests.Engine
             doc["Special"] = "Màçã ámö-î";
             doc["FirstString"] = "BEGIN this string \" has \" \t and this \f \n\r END";
             doc["CustomerId"] = Guid.NewGuid();
-            doc["Date"] = new DateTime(2015, 1, 1);
+            doc["Date"] = new DateTime(2015, 1, 1).ToUniversalTime();
             doc["MyNull"] = null;
             doc["Items"] = new BsonArray();
             doc["MyObj"] = new BsonDocument();

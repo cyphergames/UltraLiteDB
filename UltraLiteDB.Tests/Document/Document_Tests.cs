@@ -65,5 +65,6 @@ namespace UltraLiteDB.Tests.Document
             //TODO: implement get from another way
             // Assert.IsTrue(result.All(kv => object.ReferenceEquals(document.Get(kv.Key), kv.Value)));
         }
+
     }
 }
