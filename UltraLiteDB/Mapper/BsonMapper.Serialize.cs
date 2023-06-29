@@ -157,7 +157,7 @@ namespace UltraLiteDB
             var dict = o.RawValue;
 
             // adding _type only where property Type is not same as object instance type
-            if (type != t)
+            if (type != t && IncludeType)
             {
                 dict["_type"] = new BsonValue(t.FullName + ", " + t.GetTypeInfo().Assembly.GetName().Name);
             }

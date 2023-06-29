@@ -79,6 +79,11 @@ namespace UltraLiteDB
         public bool IncludeNonPublic { get; set; }
 
         /// <summary>
+        /// Whether the serializer should include typename data when the object type is a derived type (default: true)
+        /// </summary>
+        public bool IncludeType { get; set; }
+
+        /// <summary>
         /// A custom callback to change MemberInfo behavior when converting to MemberMapper.
         /// Use mapper.ResolveMember(Type entity, MemberInfo property, MemberMapper documentMappedField)
         /// Set FieldName to null if you want remove from mapped document
@@ -101,6 +106,7 @@ namespace UltraLiteDB
             this.ResolveMember = (t, mi, mm) => { };
             this.ResolveCollectionName = (t) => Reflection.IsList(t) ? Reflection.GetListItemType(t).Name : t.Name;
             this.IncludeFields = false;
+            this.IncludeType = true;
 
             _typeInstantiator = customTypeInstantiator ?? Reflection.CreateInstance;
 
