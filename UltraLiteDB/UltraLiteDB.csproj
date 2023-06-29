@@ -27,7 +27,7 @@
     <AssemblyName>UltraLiteDB</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1701;1702;1705;1591;0618</NoWarn>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\UltraLiteDB.xml</DocumentationFile>
+    <DocumentationFile>bin/$(Configuration)/$(TargetFramework)/UltraLiteDB.xml</DocumentationFile>
     <SignAssembly Condition="'$(OS)'=='Windows_NT'">true</SignAssembly>
   </PropertyGroup>
 

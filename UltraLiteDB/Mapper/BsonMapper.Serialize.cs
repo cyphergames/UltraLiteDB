@@ -38,8 +38,7 @@ namespace UltraLiteDB
             Func<object, BsonValue> custom;
 
             // if is already a bson value
-            if (obj is BsonDocument) return (BsonDocument)obj;
-            if (obj is BsonValue) return new BsonValue((BsonValue)obj);
+            if (obj is BsonValue) return (BsonValue)obj;
 
             // test string - mapper has some special options
             else if (obj is String)
