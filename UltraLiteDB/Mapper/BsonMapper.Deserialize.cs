@@ -153,13 +153,22 @@ namespace UltraLiteDB
                 BsonValue typeField;
                 var doc = value.AsDocument;
 
+                // test if value is object and has _t
+                if (doc.RawValue.TryGetValue("_t", out typeField))
+                {
+                    if(!_customIdToType.TryGetValue(typeField, out type))
+                    {
+                        throw UltraLiteException.InvalidTypedId(typeField);
+                    }
+                }
                 // test if value is object and has _type
-                if (doc.RawValue.TryGetValue("_type", out typeField))
+                else if (doc.RawValue.TryGetValue("_type", out typeField))
                 {
                     type = Type.GetType(typeField.AsString);
 
                     if (type == null) throw UltraLiteException.InvalidTypedName(typeField.AsString);
                 }
+
                 // when complex type has no definition (== typeof(object)) use Dictionary<string, object> to better set values
                 else if (type == typeof(object))
                 {

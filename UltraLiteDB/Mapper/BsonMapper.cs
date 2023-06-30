@@ -38,6 +38,9 @@ namespace UltraLiteDB
 
         private Dictionary<Type, Func<BsonValue, object>> _customDeserializer = new Dictionary<Type, Func<BsonValue, object>>();
 
+        private Dictionary<Type, BsonValue> _customTypeToId = new Dictionary<Type, BsonValue>();
+        private Dictionary<BsonValue, Type> _customIdToType = new Dictionary<BsonValue, Type>();
+
         /// <summary>
         /// Type instantiator function to support IoC
         /// </summary>
@@ -79,9 +82,9 @@ namespace UltraLiteDB
         public bool IncludeNonPublic { get; set; }
 
         /// <summary>
-        /// Whether the serializer should include typename data when the object type is a derived type (default: true)
+        /// Whether the serializer should include full typename data when the object type is a derived type (default: true)
         /// </summary>
-        public bool IncludeType { get; set; }
+        public bool IncludeFullType { get; set; }
 
         /// <summary>
         /// A custom callback to change MemberInfo behavior when converting to MemberMapper.
@@ -106,7 +109,7 @@ namespace UltraLiteDB
             this.ResolveMember = (t, mi, mm) => { };
             this.ResolveCollectionName = (t) => Reflection.IsList(t) ? Reflection.GetListItemType(t).Name : t.Name;
             this.IncludeFields = false;
-            this.IncludeType = true;
+            this.IncludeFullType = true;
 
             _typeInstantiator = customTypeInstantiator ?? Reflection.CreateInstance;
 
@@ -143,6 +146,12 @@ namespace UltraLiteDB
         {
             _customSerializer[type] = (o) => serialize(o);
             _customDeserializer[type] = (b) => deserialize(b);
+        }
+
+        public void RegisterTypeId(Type t, BsonValue id)
+        {
+            _customTypeToId.Add(t, id);
+            _customIdToType.Add(id, t);
         }
 
         #endregion

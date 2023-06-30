@@ -202,6 +202,11 @@ namespace UltraLiteDB
             return new UltraLiteException(INVALID_TYPED_NAME, "Type '{0}' not found in current domain (_type format is 'Type.FullName, AssemblyName').", type);
         }
 
+        internal static UltraLiteException InvalidTypedId(BsonValue typeId)
+        {
+            return new UltraLiteException(INVALID_TYPED_NAME, "Type '{0}' not found in custom type registry.", typeId);
+        }
+
         #endregion
     }
 }
