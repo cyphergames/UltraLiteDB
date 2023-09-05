@@ -75,7 +75,7 @@ namespace UltraLiteDB
 
                 case BsonType.Binary:
                     var bytes = value.AsBinary;
-                    this.WriteExtendDataType("$binary", Convert.ToBase64String(bytes, 0, bytes.Length));
+                    this.WriteExtendDataType("$binary", Convert.ToBase64String(bytes.Array, bytes.Offset, bytes.Count));
                     break;
 
                 case BsonType.ObjectId:

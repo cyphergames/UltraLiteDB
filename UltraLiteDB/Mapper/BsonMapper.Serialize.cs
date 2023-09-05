@@ -60,6 +60,7 @@ namespace UltraLiteDB
             else if (obj is Double) return new BsonValue((Double)obj);
             else if (obj is Decimal) return new BsonValue((Decimal)obj);
             else if (obj is Byte[]) return new BsonValue((Byte[])obj);
+            else if (obj is ArraySegment<byte>) return new BsonValue((ArraySegment<byte>)obj);
             else if (obj is ObjectId) return new BsonValue((ObjectId)obj);
             else if (obj is Guid) return new BsonValue((Guid)obj);
             else if (obj is Boolean) return new BsonValue((Boolean)obj);

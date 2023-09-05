@@ -86,6 +86,12 @@ namespace UltraLiteDB
         public BsonValue(Byte[] value)
         {
             this.Type = value == null ? BsonType.Null : BsonType.Binary;
+            this.RawValue = new ArraySegment<byte>(value);
+        }
+
+        public BsonValue(ArraySegment<byte> value)
+        {
+            this.Type = value == null ? BsonType.Null : BsonType.Binary;
             this.RawValue = value;
         }
 
@@ -133,6 +139,7 @@ namespace UltraLiteDB
             else if (value is List<BsonValue>) return new BsonArray((List<BsonValue>)value);
             else if (value is IEnumerable) return new BsonArray((IEnumerable)value);
             else if (value is Byte[]) return new BsonValue((Byte[])value);
+            else if (value is ArraySegment<byte>) return new BsonValue((ArraySegment<byte>)value);
             else if (value is ObjectId) return new BsonValue((ObjectId)value);
             else if (value is Guid) return new BsonValue((Guid)value);
             else if (value is Boolean) return new BsonValue((Boolean)value);
@@ -144,6 +151,10 @@ namespace UltraLiteDB
             }
         }
 
+        public T AsType<T>()
+        {
+            return (T)this.RawValue;
+        }
 
         protected BsonValue(BsonType type, object rawValue)
         {
@@ -184,7 +195,7 @@ namespace UltraLiteDB
         public BsonDocument AsDocument => this as BsonDocument;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public Byte[] AsBinary => this.RawValue as Byte[];
+        public ArraySegment<byte> AsBinary => (ArraySegment<byte>)this.RawValue;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public bool AsBoolean => (bool)this.RawValue;
@@ -289,7 +300,7 @@ namespace UltraLiteDB
                     case BsonType.String: return this.AsString.IsNullOrEmpty();
                     case BsonType.Document: return this.AsDocument.Count > 0;
                     case BsonType.Array: return this.AsArray.Count > 0;
-                    case BsonType.Binary: return this.AsBinary.Length > 0;
+                    case BsonType.Binary: return this.AsBinary.Count > 0;
                     case BsonType.ObjectId: return this.AsObjectId == ObjectId.Empty;
                     case BsonType.Guid: return this.AsGuid == Guid.Empty;
                     case BsonType.Boolean: return this.AsBoolean == false;
@@ -382,13 +393,19 @@ namespace UltraLiteDB
         }
 
         // Binary
-        public static implicit operator Byte[] (BsonValue value)
+        public static implicit operator ArraySegment<byte> (BsonValue value)
         {
-            return (Byte[])value.RawValue;
+            return (ArraySegment<byte>)value.RawValue;
         }
 
         // Binary
-        public static implicit operator BsonValue(Byte[] value)
+        public static implicit operator BsonValue(byte[] value)
+        {
+            return new BsonValue(value);
+        }
+
+        // Binary
+        public static implicit operator BsonValue(ArraySegment<byte> value)
         {
             return new BsonValue(value);
         }
@@ -654,7 +671,7 @@ namespace UltraLiteDB
 
                 case BsonType.String: return Encoding.UTF8.GetByteCount(this.AsString);
 
-                case BsonType.Binary: return this.AsBinary.Length;
+                case BsonType.Binary: return this.AsBinary.Count;
                 case BsonType.ObjectId: return 12;
                 case BsonType.Guid: return 16;
 

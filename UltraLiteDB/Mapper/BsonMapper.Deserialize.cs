@@ -53,6 +53,7 @@ namespace UltraLiteDB
             typeof(Guid),
             typeof(DateTime),
             typeof(Byte[]),
+            typeof(ArraySegment<byte>),
             typeof(ObjectId),
             typeof(Double),
             typeof(Decimal)

@@ -91,8 +91,8 @@ namespace UltraLiteDB
                 case BsonType.Binary:
                     writer.Write((byte)0x05);
                     WriteCString(writer, key);
-                    var bytes = (byte[])value.RawValue;
-                    writer.Write(bytes.Length);
+                    var bytes = (ArraySegment<byte>)value.RawValue;
+                    writer.Write(bytes.Count);
                     writer.Write((byte)0x00); // subtype 00 - Generic binary subtype
                     writer.Write(bytes);
                     break;

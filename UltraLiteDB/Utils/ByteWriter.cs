@@ -196,6 +196,13 @@ namespace UltraLiteDB
             _pos += value.Length;
         }
 
+        public void Write(ArraySegment<byte> value)
+        {
+            System.Buffer.BlockCopy(value.Array, value.Offset, _buffer, _pos, value.Count);
+
+            _pos += value.Count;
+        }
+
         #endregion
 
         #region Extended types

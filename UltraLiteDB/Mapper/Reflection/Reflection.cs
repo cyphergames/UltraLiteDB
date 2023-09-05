@@ -227,6 +227,7 @@ namespace UltraLiteDB
 
         public static GenericSetter CreateGenericSetter(Type type, MemberInfo memberInfo)
         {
+            
             // when member is a field, use simple Reflection
             if (memberInfo is FieldInfo)
             {
@@ -237,11 +238,20 @@ namespace UltraLiteDB
 
             // if is property, use Emit IL code
             var propertyInfo = memberInfo as PropertyInfo;
+
             var setMethod = propertyInfo.GetSetMethod(true);
 
             if (setMethod == null) return null;
 
-            return (target, value) => setMethod.Invoke(target, new[] { value });
+            if(propertyInfo.PropertyType == typeof(byte[]))
+            {
+                // Special setter for byte arrays
+                return (target, value) => setMethod.Invoke(target, new[] { ((ArraySegment<byte>)value).Array });
+            }
+            else
+            {
+                return (target, value) => setMethod.Invoke(target, new[] { value });
+            }
         }
     
     }

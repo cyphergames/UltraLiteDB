@@ -66,6 +66,9 @@ namespace UltraLiteDB.Tests.Mapper
 
         public Uri MyUri { get; set; }
 
+        public byte[] MyByteArray { get; set; }
+        public ArraySegment<byte> MyArraySegment { get; set; }
+
         // do not serialize this properties
         [BsonIgnore]
         public string MyIgnore { get; set; }
@@ -170,6 +173,9 @@ namespace UltraLiteDB.Tests.Mapper
                 MyStringEnumerable = new string[] { "One", "Two" },
                 CustomStringEnumerable = new CustomStringEnumerable(new string[] { "One", "Two" }),
 
+                MyByteArray = new byte[] { 1, 2, 3 },
+                MyArraySegment = new ArraySegment<byte>(new byte[] { 0,1,2,3,4}, 1, 3),
+
                 // list of structs
                 MyCollectionPoint = new List<Point> { new Point(1, 1), Point.Empty },
                 MyListPoint = new List<Point> { new Point(1, 1), Point.Empty },
@@ -240,6 +246,9 @@ namespace UltraLiteDB.Tests.Mapper
             Assert.AreEqual(obj.MyTimespan, nobj.MyTimespan);
             Assert.AreEqual(obj.MyDecimal, nobj.MyDecimal);
             Assert.AreEqual(obj.MyUri, nobj.MyUri);
+
+            Assert.AreEqual(obj.MyByteArray, nobj.MyByteArray);
+            Assert.AreEqual(obj.MyArraySegment, nobj.MyArraySegment);
 
             // list
             Assert.AreEqual(obj.MyStringArray[0], nobj.MyStringArray[0]);

@@ -21,5 +21,22 @@ namespace UltraLiteDB
             if (i == lh.Length) return i == rh.Length ? 0 : -1;
             return 1;
         }
+
+        public static int BinaryCompareTo(this ArraySegment<byte> lh, ArraySegment<byte> rh)
+        {
+            if (lh == null) return rh == null ? 0 : -1;
+            if (rh == null) return 1;
+
+            var result = 0;
+            var i = 0;
+            var stop = Math.Min(lh.Count, rh.Count);
+
+            for (; 0 == result && i < stop; i++)
+                result = lh[i].CompareTo(rh[i]);
+
+            if (result != 0) return result < 0 ? -1 : 1;
+            if (i == lh.Count) return i == rh.Count ? 0 : -1;
+            return 1;
+        }
     }
 }
