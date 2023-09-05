@@ -105,7 +105,8 @@ namespace UltraLiteDB.Tests.Mapper
 
         // fields
         public string MyField;
-
+        public byte[] MyBinaryField;
+        public ArraySegment<byte> MyArraySegmentField;
 
         // this is a indexer property - should not be serialized #795
         public string this[string itemName]
@@ -187,6 +188,8 @@ namespace UltraLiteDB.Tests.Mapper
                 MyByte = 255,
                 MySByte = -99,
                 MyField = "Field test",
+                MyBinaryField = new byte[] { 1, 2, 3 },
+                MyArraySegmentField = new ArraySegment<byte>(new byte[] { 0,1,2,3,4}, 1, 3),
                 MyTimespan = TimeSpan.FromDays(1),
                 MyDecimal = 19.9m,
                 MyDecimalNullable = 25.5m,
@@ -243,6 +246,8 @@ namespace UltraLiteDB.Tests.Mapper
             Assert.AreEqual(obj.MyByte, nobj.MyByte);
             Assert.AreEqual(obj.MySByte, nobj.MySByte);
             Assert.AreEqual(obj.MyField, nobj.MyField);
+            Assert.AreEqual(obj.MyBinaryField, nobj.MyBinaryField);
+            Assert.AreEqual(obj.MyArraySegmentField, nobj.MyArraySegmentField);
             Assert.AreEqual(obj.MyTimespan, nobj.MyTimespan);
             Assert.AreEqual(obj.MyDecimal, nobj.MyDecimal);
             Assert.AreEqual(obj.MyUri, nobj.MyUri);

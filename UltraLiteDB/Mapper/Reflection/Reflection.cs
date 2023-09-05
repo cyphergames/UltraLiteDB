@@ -233,7 +233,16 @@ namespace UltraLiteDB
             {
                 var fieldInfo = memberInfo as FieldInfo;
 
-                return fieldInfo.SetValue;
+                if(fieldInfo.FieldType == typeof(byte[]))
+                {
+                    // Special setter for byte arrays
+                    return (target, value) => fieldInfo.SetValue(target, ((ArraySegment<byte>)value).Array);
+                }
+                else
+                {
+                    return fieldInfo.SetValue;
+                }
+                
             }
 
             // if is property, use Emit IL code
