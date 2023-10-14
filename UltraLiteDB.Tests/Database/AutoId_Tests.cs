@@ -230,8 +230,13 @@ namespace UltraLiteDB.Tests.Database
                 Assert.AreEqual(2, two["_id"].AsInt32);
 
                 // now delete first 2 rows
-                db.Delete("col", one["_id"].AsInt32);
-                db.Delete("col", two["_id"].AsInt32);
+                int oneId = one["_id"].AsInt32;
+                int twoId = two["_id"].AsInt32;
+                db.Delete("col", oneId);
+                db.Delete("col", twoId);
+
+                Assert.IsNull(db.FindById("col", oneId));
+                Assert.IsNull(db.FindById("col", twoId));
 
                 // and insert new documents
                 db.Insert("col", new BsonDocument[] { three, four }, BsonAutoId.Int32);
