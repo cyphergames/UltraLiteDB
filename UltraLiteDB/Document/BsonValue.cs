@@ -86,13 +86,13 @@ namespace UltraLiteDB
         public BsonValue(Byte[] value)
         {
             this.Type = value == null ? BsonType.Null : BsonType.Binary;
-            this.RawValue = new ArraySegment<byte>(value);
+            this.RawValue = value == null ? null : new ArraySegment<byte>(value);
         }
 
         public BsonValue(ArraySegment<byte> value)
         {
-            this.Type = value == null ? BsonType.Null : BsonType.Binary;
-            this.RawValue = value;
+            this.Type = value.Array == null ? BsonType.Null : BsonType.Binary;
+            this.RawValue = value.Array == null ? null : value;
         }
 
         public BsonValue(ObjectId value)

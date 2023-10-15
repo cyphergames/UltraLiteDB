@@ -24,8 +24,8 @@ namespace UltraLiteDB
 
         public static int BinaryCompareTo(this ArraySegment<byte> lh, ArraySegment<byte> rh)
         {
-            if (lh == null) return rh == null ? 0 : -1;
-            if (rh == null) return 1;
+            if (lh.Array == null) return rh.Array == null ? 0 : -1;
+            if (rh.Array == null) return 1;
 
             var result = 0;
             var i = 0;
