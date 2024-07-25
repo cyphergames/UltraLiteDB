@@ -69,7 +69,7 @@ void DatabaseTest()
     character["Equipment"] = new string[] { "sword", "gnome hat" };
     character["Level"] = 1;
     character["IsActive"] = true;
-	
+
     // Insert new customer document (Id will be auto generated)
     BsonValue id = col.Insert(character);
     // new Id has also been added to the document at character["_id"]
@@ -113,6 +113,11 @@ To build UltraLiteDB yourself:
 3. dotnet build -c Release
 4. Your new DLL is at ./UltraLiteDB/bin/Release/netstandard2.0/UltraLiteDB.dll
 
+## 3rd Party
+
+### GUI Tool
+https://github.com/namigop/OneBella/releases/download/v1.1/OneBella-v1.1-macOs.zip
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
@@ -121,4 +126,4 @@ Copyright (c) 2017 - Maurício David
 
 ## Thanks
 
-This project is entirely built upon Maurício David's excellent LiteDB, and would not exist without it. 
+This project is entirely built upon Maurício David's excellent LiteDB, and would not exist without it.
